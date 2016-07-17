@@ -10,7 +10,7 @@ dependencies:
 test:
   override:
     - docker run -d -p 7000:7000 --name ovrstatapi_container registry.gitlab.com/sdwolfe32/ovrstat; sleep 3
-    - curl --retry 10 --retry-delay 5 -v http://localhost:7000/stats/v1/pc/us/Viz-1213
+    - curl --retry 10 --retry-delay 5 -v http://localhost:7000/v1/stats/pc/us/Viz-1213
 
 deployment:
   hub:
