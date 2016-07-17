@@ -12,13 +12,19 @@ func main() {
 		tag := c.Param("tag")
 
 		if platform == "" || region == "" || tag == "" {
-			c.Error("Missing Required Fields", 400)
+			c.JSON(iris.StatusNotFound, iris.Map{"Error": "Required fields are missing"})
 			return
 		}
 
 		player, err := goow.GetPlayerStats(platform, region, tag)
 		if err != nil {
-			c.Error("There was an error retrieving stats", 404)
+			c.JSON(iris.StatusNotFound, iris.Map{"Error": "There was an error retrieving stats"})
+			return
+		}
+
+		if player.Name == "" && player.Level == 0 {
+			c.JSON(iris.StatusNotFound, iris.Map{"Error": "The requested player was not found"})
+			return
 		}
 
 		c.JSON(iris.StatusOK, player)
