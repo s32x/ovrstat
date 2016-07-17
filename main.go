@@ -6,6 +6,9 @@ import (
 )
 
 func main() {
+	iris.Get("/", func(c *iris.Context) {
+		c.JSON(iris.StatusOK, iris.Map{"endpoints": "/v1/stats/{platform}/{region}/{tag}"})
+	})
 	iris.Get("/v1/stats/:platform/:region/:tag", func(c *iris.Context) {
 		platform := c.Param("platform")
 		region := c.Param("region")
