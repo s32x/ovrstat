@@ -14,7 +14,7 @@ You have two options for using the API, Either import the child dep used in this
 
 Below is an example of using the REST endpoint:
 ```
-https://ovrstat.com/v1/player_stats/pc/us/Viz-1213
+https://ovrstat.com/v1/stats/pc/us/Viz-1213
 ```
 
 And here is an example of using the included go library:

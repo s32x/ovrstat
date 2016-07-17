@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	iris.Get("/v1/:platform/:region/:tag", func(c *iris.Context) {
+	iris.Get("/v1/stats/:platform/:region/:tag", func(c *iris.Context) {
 		platform := c.Param("platform")
 		region := c.Param("region")
 		tag := c.Param("tag")
