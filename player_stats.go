@@ -29,31 +29,18 @@ type StatsCollection struct {
 	ObjectiveKillsAvg float64
 	ObjectiveTimeAvg  string
 	SoloKillsAvg      float64
-	//TopHeros          []HeroStats
-	//CareerStats     CareerStats
+	TopHeros          map[string]*HeroStats
 }
 
-// type HeroStats struct {
-// 	Name                string
-// 	TimePlayed          string
-// 	GamesWon            int
-// 	WinPercentage       int
-// 	WeaponAccuracy      int
-// 	EliminationsPerLife float32
-// 	MultiKillBest       int
-// 	ObjectiveKillsAvg   float32
-// }
-//
-// type CareerStats struct {
-// 	Combat        CombatStats
-// 	Death         DeathStats
-// 	Game          GameStats
-// 	Assists       AssistsStats
-// 	Average       AverageStats
-// 	Miscellaneous MiscellaneousStats
-// 	Best          BestStats
-// 	MatchAwards   MatchAwardsStats
-// }
+type HeroStats struct {
+	TimePlayed          string
+	GamesWon            int
+	WinPercentage       int
+	WeaponAccuracy      int
+	EliminationsPerLife float64
+	MultiKillBest       int
+	ObjectiveKillsAvg   float64
+}
 
 // GetPlayerStats : Gets all stats available for a player
 func GetPlayerStats(platform, region, tag string) (*PlayerStats, error) {
@@ -64,22 +51,22 @@ func GetPlayerStats(platform, region, tag string) (*PlayerStats, error) {
 		"/en-us/career/" + platform + "/" + region + "/" + tag)
 
 	// Scrapes general stats info for player
-	if err = unmarshalGeneralStats(
+	if err = populateGeneralInfo(
 		playerDoc.Find("div.masthead").First(),
 		&playerStats); err != nil {
 		return nil, err
 	}
 
 	// Scrapes all Quickplay stats for player
-	if err = unmarshalDetailedStats(
-		playerDoc.Find("div#quick-play div.row ul.row").First(),
+	if err = populateDetailedStats(
+		playerDoc.Find("div#quick-play").First(),
 		&playerStats.QuickPlayStats); err != nil {
 		return nil, err
 	}
 
 	// Scrapes all Competitive stats for player
-	if err = unmarshalDetailedStats(
-		playerDoc.Find("div#competitive-play div.row ul.row").First(),
+	if err = populateDetailedStats(
+		playerDoc.Find("div#competitive-play").First(),
 		&playerStats.CompetitiveStats); err != nil {
 		return nil, err
 	}
@@ -87,7 +74,8 @@ func GetPlayerStats(platform, region, tag string) (*PlayerStats, error) {
 	return &playerStats, nil
 }
 
-func unmarshalGeneralStats(generalSelector *goquery.Selection, playerStats *PlayerStats) error {
+func populateGeneralInfo(generalSelector *goquery.Selection, playerStats *PlayerStats) error {
+	// Populates all general basic stats for the player
 	playerStats.Icon, _ = generalSelector.Find("img.player-portrait").Attr("src")
 	playerStats.Name = generalSelector.Find("h1.header-masthead").Text()
 	playerStats.Level, _ = strconv.Atoi(generalSelector.Find("div.player-level div.u-vertical-center").Text())
@@ -100,37 +88,79 @@ func unmarshalGeneralStats(generalSelector *goquery.Selection, playerStats *Play
 	return nil
 }
 
-func unmarshalDetailedStats(quickPlaySelector *goquery.Selection, quickPlayStats *StatsCollection) error {
-	quickPlaySelector.Find("li.column").Each(func(i int, stat *goquery.Selection) {
-		statType := strings.ToLower(stat.Find("p.card-copy").First().Text())
-		statVal := strings.Replace(stat.Find("h3.card-heading").Text(), ",", "", -1)
+func populateDetailedStats(playModeSelector *goquery.Selection, statsColl *StatsCollection) error {
+	// Populates all detailed basic stats for the player
+	playModeSelector.Find("li.column").Each(func(i int, statSel *goquery.Selection) {
+		statType := strings.ToLower(statSel.Find("p.card-copy").First().Text())
+		statVal := strings.Replace(statSel.Find("h3.card-heading").Text(), ",", "", -1)
 		if strings.Contains(statType, "eliminations") {
-			quickPlayStats.EliminationsAvg, _ = strconv.ParseFloat(statVal, 64)
+			statsColl.EliminationsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 		if strings.Contains(statType, "damage done") {
-			quickPlayStats.DamageDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
+			statsColl.DamageDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
 		}
 		if strings.Contains(statType, "deaths") {
-			quickPlayStats.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
+			statsColl.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 		if strings.Contains(statType, "deaths") {
-			quickPlayStats.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
+			statsColl.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 		if strings.Contains(statType, "final blows") {
-			quickPlayStats.FinalBlowsAvg, _ = strconv.ParseFloat(statVal, 64)
+			statsColl.FinalBlowsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 		if strings.Contains(statType, "healing done") {
-			quickPlayStats.HealingDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
+			statsColl.HealingDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
 		}
 		if strings.Contains(statType, "objective kills") {
-			quickPlayStats.ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
+			statsColl.ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 		if strings.Contains(statType, "objective time") {
-			quickPlayStats.ObjectiveTimeAvg = statVal
+			statsColl.ObjectiveTimeAvg = statVal
 		}
 		if strings.Contains(statType, "solo kills") {
-			quickPlayStats.SoloKillsAvg, _ = strconv.ParseFloat(statVal, 64)
+			statsColl.SoloKillsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 	})
+
+	// Parses out top hero stats and assigns it to our parent struct
+	statsColl.TopHeros = parseHeroStats(playModeSelector.Find("section.hero-comparison-section").First())
+
 	return nil
+}
+
+func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*HeroStats {
+	tempHeroStatMap := make(map[string]*HeroStats)
+
+	heroStatsSelector.Find("div.progress-category").Each(func(i int, heroGroupSel *goquery.Selection) {
+		categoryID, _ := heroGroupSel.Attr("data-category-id")
+		categoryID = strings.Replace(categoryID, "overwatch.guid.0x0860000000000", "", -1)
+		heroGroupSel.Find("div.progress-2").Each(func(i2 int, statSel *goquery.Selection) {
+			heroName := statSel.Find("div.title").Text()
+			statVal := statSel.Find("div.description").Text()
+
+			// Creates hero map if it doesn't exist
+			if tempHeroStatMap[heroName] == nil {
+				tempHeroStatMap[heroName] = new(HeroStats)
+			}
+
+			// Sets hero stats
+			if categoryID == "021" {
+				tempHeroStatMap[heroName].TimePlayed = statVal
+			} else if categoryID == "039" {
+				tempHeroStatMap[heroName].GamesWon, _ = strconv.Atoi(statVal)
+			} else if categoryID == "3D1" {
+				tempHeroStatMap[heroName].WinPercentage, _ = strconv.Atoi(strings.Replace(statVal, "%", "", -1))
+			} else if categoryID == "02F" {
+				tempHeroStatMap[heroName].WeaponAccuracy, _ = strconv.Atoi(strings.Replace(statVal, "%", "", -1))
+			} else if categoryID == "3D2" {
+				tempHeroStatMap[heroName].EliminationsPerLife, _ = strconv.ParseFloat(statVal, 64)
+			} else if categoryID == "346" {
+				tempHeroStatMap[heroName].MultiKillBest, _ = strconv.Atoi(statVal)
+			} else if categoryID == "39C" {
+				tempHeroStatMap[heroName].ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
+			}
+		})
+	})
+
+	return tempHeroStatMap
 }
