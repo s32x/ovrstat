@@ -29,5 +29,5 @@ func main() {
 
 		c.JSON(iris.StatusOK, player)
 	})
-	iris.Listen(":8080")
+	iris.Listen("0.0.0.0:7000")
 }

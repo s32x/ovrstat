@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker build -t registry.gitlab.com/sdwolfe32/ovrstat .
+
+test:
+  override:
+    - docker run -d -p 7000:7000 --name ovrstatapi_container registry.gitlab.com/sdwolfe32/ovrstat; sleep 3
+    - curl --retry 10 --retry-delay 5 -v http://localhost:7000/v1/pc/us/Viz-1213
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $GITLAB_EMAIL -u $GITLAB_USERNAME -p $GITLAB_PASSWORD registry.gitlab.com
+      - docker push registry.gitlab.com/sdwolfe32/lolname-api
