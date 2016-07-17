@@ -1,23 +1,29 @@
-# goow
+# ovrstat
 
-goow is a basic web scraper for the Overwatch stats site. It can be seen as a premature API binding for the Overwatch API written in Go.
+ovrstat.com is a simple web scraper for the Overwatch stats site that then serves the data as JSON. Also included is goow, a binding used to retrieve the stats that can be used as an Overwatch API go dep.
 
 ### Installing
 
 ```
-go get github.com/sdwolfe32/goow
+go get github.com/sdwolfe32/ovrstat/goow
 ```
 
 ### Usage
 
-All that's needed to get player stats is to pass the {platform}, {region}, and {tag} to the GetPlayerStats() func. For example:
+You have two options for using the API, Either import the child dep used in this API or retrieve data from the public ovrstat api.
 
+Below is an example of using the REST endpoint:
+```
+https://ovrstat.com/v1/player_stats/pc/us/Viz-1213
+```
+
+And here is an example of using the included go library:
 ```
 player, _ := goow.GetPlayerStats("pc", "us", "Viz-1213")
 ```
-The above example should return to you a PlayerStats struct containing detailed statistics for the specified Overwatch player.
+Both above examples should return to you a PlayerStats struct containing detailed statistics for the specified Overwatch player.
 
-## Full example
+## Full Go example
 
 ```
 package main
@@ -25,7 +31,7 @@ package main
 import (
 	"log"
 
-	"github.com/sdwolfe32/goow"
+	"github.com/sdwolfe32/ovrstat/goow"
 )
 
 func main() {
