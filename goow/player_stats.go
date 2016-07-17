@@ -85,25 +85,26 @@ func parseDetailedStats(playModeSelector *goquery.Selection) statsCollection {
 
 	// Populates all detailed basic stats for the player
 	playModeSelector.Find("li.column").Each(func(i int, statSel *goquery.Selection) {
-		statType := strings.ToLower(statSel.Find("p.card-copy").First().Text())
+		statType := statSel.Find("p.card-copy").First().Text()
+		statType = strings.Replace(strings.ToLower(statType), " - average", "", -1)
 		statVal := strings.Replace(statSel.Find("h3.card-heading").Text(), ",", "", -1)
-		if strings.Contains(statType, "eliminations") {
+
+		switch statType {
+		case "eliminations":
 			sc.EliminationsAvg, _ = strconv.ParseFloat(statVal, 64)
-		} else if strings.Contains(statType, "damage done") {
+		case "damage done":
 			sc.DamageDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
-		} else if strings.Contains(statType, "deaths") {
+		case "deaths":
 			sc.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
-		} else if strings.Contains(statType, "deaths") {
-			sc.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
-		} else if strings.Contains(statType, "final blows") {
+		case "final blows":
 			sc.FinalBlowsAvg, _ = strconv.ParseFloat(statVal, 64)
-		} else if strings.Contains(statType, "healing done") {
+		case "healing done":
 			sc.HealingDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
-		} else if strings.Contains(statType, "objective kills") {
+		case "objective kills":
 			sc.ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
-		} else if strings.Contains(statType, "objective time") {
+		case "objective time":
 			sc.ObjectiveTimeAvg = statVal
-		} else if strings.Contains(statType, "solo kills") {
+		case "solo kills":
 			sc.SoloKillsAvg, _ = strconv.ParseFloat(statVal, 64)
 		}
 	})
@@ -114,6 +115,7 @@ func parseDetailedStats(playModeSelector *goquery.Selection) statsCollection {
 	return sc
 }
 
+// parseHeroStats : Parses stats for each individual hero and returns a map
 func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*basicHeroStats {
 	bhsMap := make(map[string]*basicHeroStats)
 
@@ -129,20 +131,21 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*basicHeroS
 				bhsMap[heroName] = new(basicHeroStats)
 			}
 
-			// Sets hero stats
-			if categoryID == "021" {
+			// Sets hero stats based on stat category type
+			switch categoryID {
+			case "021":
 				bhsMap[heroName].TimePlayed = statVal
-			} else if categoryID == "039" {
+			case "039":
 				bhsMap[heroName].GamesWon, _ = strconv.Atoi(statVal)
-			} else if categoryID == "3D1" {
+			case "3D1":
 				bhsMap[heroName].WinPercentage, _ = strconv.Atoi(strings.Replace(statVal, "%", "", -1))
-			} else if categoryID == "02F" {
+			case "02F":
 				bhsMap[heroName].WeaponAccuracy, _ = strconv.Atoi(strings.Replace(statVal, "%", "", -1))
-			} else if categoryID == "3D2" {
+			case "3D2":
 				bhsMap[heroName].EliminationsPerLife, _ = strconv.ParseFloat(statVal, 64)
-			} else if categoryID == "346" {
+			case "346":
 				bhsMap[heroName].MultiKillBest, _ = strconv.Atoi(statVal)
-			} else if categoryID == "39C" {
+			case "39C":
 				bhsMap[heroName].ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
 			}
 		})
