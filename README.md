@@ -2,6 +2,8 @@
 
 ovrstat.com is a simple web scraper for the Overwatch stats site that then serves the data as JSON. Also included is goow, a binding used to retrieve the stats that can be used as an Overwatch API go dep.
 
+Note: As this is a web-scraping API I saw no reason to serve separate data across multiple requests. While caching could be an option to save bandwidth on your end, I didn't see any reason not to give you back as much information as we retrieve from Blizzard, thus there is only one endpoint currently.
+
 ### Installing
 
 ```
