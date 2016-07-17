@@ -30,7 +30,6 @@ type StatsCollection struct {
 	ObjectiveTimeAvg  string
 	SoloKillsAvg      float64
 	TopHeros          map[string]*HeroStats
-	CareerStats       map[string]*CareerStats
 }
 
 type HeroStats struct {
@@ -41,18 +40,6 @@ type HeroStats struct {
 	EliminationsPerLife float64
 	MultiKillBest       int
 	ObjectiveKillsAvg   float64
-}
-
-type CareerStats struct {
-	HeroSpecific  HeroSpecific
-	Combat        CombatStats
-	Death         DeathStats
-	Game          GameStats
-	Assists       AssistsStats
-	Average       AverageStats
-	Miscellaneous MiscellaneousStats
-	Best          BestStats
-	MatchAwards   MatchAwardsStats
 }
 
 // GetPlayerStats : Gets all stats available for a player
@@ -138,9 +125,6 @@ func populateDetailedStats(playModeSelector *goquery.Selection, statsColl *Stats
 	// Parses out top hero stats and assigns it to our parent struct
 	statsColl.TopHeros = parseHeroStats(playModeSelector.Find("section.hero-comparison-section").First())
 
-	// Parses out career stats and assigns it to our parent struct
-	statsColl.CareerStats = parseCareerStats(playModeSelector.Find("section.career-stats-section").First())
-
 	return nil
 }
 
@@ -179,89 +163,4 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*HeroStats 
 	})
 
 	return tempHeroStatMap
-}
-
-func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*CareerStats {
-	careerStatMap := make(map[string]*CareerStats)
-
-	careerStatsSelector.Find("div.js-stats").Each(func(i int, heroGroupSel *goquery.Selection) {
-		categoryID, _ := heroGroupSel.Attr("data-category-id")
-		categoryID = strings.Replace(categoryID, "0x02E00000", "", -1)
-		heroGroupSel.Find("div.progress-2").Each(func(i2 int, statSel *goquery.Selection) {
-			heroName := ""
-			switch categoryID {
-			case "FFFFFFFF":
-				heroName = "All Heros"
-			case "00000002":
-				heroName = "Reaper"
-			case "00000003":
-				heroName = "Tracer"
-			case "00000004":
-				heroName = "Mercy"
-			case "00000005":
-				heroName = "Hanzo"
-			case "00000006":
-				heroName = "Torbjörn"
-			case "00000007":
-				heroName = "Reinhardt"
-			case "00000008":
-				heroName = "Pharah"
-			case "00000009":
-				heroName = "Winston"
-			case "0000000A":
-				heroName = "Widowmaker"
-			case "00000015":
-				heroName = "Bastion"
-			case "00000016":
-				heroName = "Symmetra"
-			case "00000020":
-				heroName = "Zenyatta"
-			case "00000029":
-				heroName = "Genji"
-			case "00000040":
-				heroName = "Roadhog"
-			case "00000042":
-				heroName = "McCree"
-			case "00000065":
-				heroName = "Junkrat"
-			case "00000068":
-				heroName = "Zarya"
-			case "0000006E":
-				heroName = "Soldier: 76"
-			case "00000079":
-				heroName = "Lúcio"
-			case "0000007A":
-				heroName = "D.Va"
-			case "000000DD":
-				heroName = "Mei"
-			}
-
-			statVal := statSel.Find("div.description").Text()
-
-			// Creates hero map if it doesn't exist
-			if careerStatMap[heroName] == nil {
-				careerStatMap[heroName] = new(HeroStats)
-			}
-
-			// Sets hero stats
-			if categoryID == "021" {
-				careerStatMap[heroName].TimePlayed = statVal
-			} else if categoryID == "039" {
-				careerStatMap[heroName].GamesWon, _ = strconv.Atoi(statVal)
-			} else if categoryID == "3D1" {
-				careerStatMap[heroName].WinPercentage, _ = strconv.Atoi(strings.Replace(statVal, "%", "", -1))
-			} else if categoryID == "02F" {
-				careerStatMap[heroName].WeaponAccuracy, _ = strconv.Atoi(strings.Replace(statVal, "%", "", -1))
-			} else if categoryID == "3D2" {
-				careerStatMap[heroName].EliminationsPerLife, _ = strconv.ParseFloat(statVal, 64)
-			} else if categoryID == "346" {
-				iVal, _ := strconv.Atoi(statVal)
-				careerStatMap[heroName].MultiKillBest = iVal
-			} else if categoryID == "39C" {
-				careerStatMap[heroName].ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
-			}
-		})
-	})
-
-	return tempHeroStats
 }
