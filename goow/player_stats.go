@@ -3,6 +3,7 @@ package goow
 import (
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -200,9 +201,9 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 				statSel.Find("td").Each(func(i4 int, statKV *goquery.Selection) {
 					switch i4 {
 					case 0:
-						statKey = statKV.Text()
+						statKey = cleanJSONKey(statKV.Text())
 					case 1:
-						statVal = statKV.Text()
+						statVal = strings.Replace(statKV.Text(), ",", "", -1) // Removes commas from 1k+ values
 
 						// Creates stat map if it doesn't exist
 						if csMap[currentHero] == nil {
@@ -264,4 +265,14 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 	})
 
 	return csMap
+}
+
+func cleanJSONKey(str string) string {
+	str = strings.Replace(str, "-", "", -1) // Removes all dashes from titles
+	str = strings.Title(str)                // Uppercases lowercase leading characters
+	str = strings.Replace(str, " ", "", -1) // Removes Spaces
+	for i, v := range str {                 // Lowercases initial character
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }
