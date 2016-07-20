@@ -39,6 +39,7 @@ func main() {
 				"platform": platform,
 				"region":   region,
 				"tag":      tag,
+				"source":   c.RequestIP(),
 			},
 		})
 
