@@ -33,7 +33,8 @@ func main() {
 
 		// Track stats lookup event
 		sc.Track(&analytics.Track{
-			Event: "Player Stats Lookup",
+			Event:       "Player Stats Lookup",
+			AnonymousId: "ovrstat",
 			Properties: map[string]interface{}{
 				"platform": platform,
 				"region":   region,
