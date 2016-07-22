@@ -61,9 +61,14 @@ type careerStats struct {
 
 // GetPlayerStats : Gets all stats available for a player
 func GetPlayerStats(platform, region, tag string) (PlayerStats, error) {
+	// Creates the profile url page based on platform
+	url := "https://playoverwatch.com" + "/en-us/career/" + platform + "/" + region + "/" + tag
+	if platform != "pc" {
+		url = "https://playoverwatch.com" + "/en-us/career/" + platform + "/" + tag
+	}
+
 	// Performs the http request on the Overwatch website to retrieve all player info
-	playerDoc, err := goquery.NewDocument("https://playoverwatch.com" +
-		"/en-us/career/" + platform + "/" + region + "/" + tag)
+	playerDoc, err := goquery.NewDocument(url)
 	if err != nil {
 		return PlayerStats{}, err
 	}
