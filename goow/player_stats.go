@@ -273,7 +273,8 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 }
 
 func cleanJSONKey(str string) string {
-	str = strings.Replace(str, "-", "", -1) // Removes all dashes from titles
+	str = strings.Replace(str, "-", " ", -1) // Removes all dashes from titles
+	str = strings.ToLower(str)
 	str = strings.Title(str)                // Uppercases lowercase leading characters
 	str = strings.Replace(str, " ", "", -1) // Removes Spaces
 	for i, v := range str {                 // Lowercases initial character
