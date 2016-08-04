@@ -18,7 +18,7 @@ type PlayerStats struct {
 	PrestigeIcon     string          `json:"prestigeIcon"`
 	Rating           string          `json:"rating"`
 	RatingIcon       string          `json:"ratingIcon"`
-	GamesPlayed      int             `json:"gamesPlayed"`
+	GamesWon         int             `json:"gamesWon"`
 	QuickPlayStats   statsCollection `json:"quickPlayStats"`
 	CompetitiveStats statsCollection `json:"competitiveStats"`
 }
@@ -90,7 +90,7 @@ func parseGeneralInfo(generalSelector *goquery.Selection) PlayerStats {
 	// Populates all general basic stats for the player
 	ps.Icon, _ = generalSelector.Find("img.player-portrait").Attr("src")
 	ps.Name = generalSelector.Find("h1.header-masthead").Text()
-	ps.Level, _ = strconv.Atoi(generalSelector.Find("div.player-level div.u-vertical-center").Text())
+	ps.Level, _ = strconv.Atoi(generalSelector.Find("div.player-level div.u-vertical-center").First().Text())
 	ps.LevelIcon, _ = generalSelector.Find("div.player-level").Attr("style")
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, "background-image:url(", "", -1)
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, ")", "", -1)
@@ -98,9 +98,9 @@ func parseGeneralInfo(generalSelector *goquery.Selection) PlayerStats {
 	ps.PrestigeIcon, _ = generalSelector.Find("div.player-rank").Attr("style")
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, "background-image:url(", "", -1)
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, ")", "", -1)
-	ps.Rating = generalSelector.Find("div.competitive-rank div.u-align-center").Text()
+	ps.Rating = generalSelector.Find("div.competitive-rank div.u-align-center").First().Text()
 	ps.RatingIcon, _ = generalSelector.Find("div.competitive-rank img").Attr("src")
-	ps.GamesPlayed, _ = strconv.Atoi(strings.Replace(generalSelector.Find("div.masthead-player p.masthead-detail.h4 span").Text(), " games won", "", -1))
+	ps.GamesWon, _ = strconv.Atoi(strings.Replace(generalSelector.Find("div.masthead p.masthead-detail.h4 span").Text(), " games won", "", -1))
 
 	return ps
 }
