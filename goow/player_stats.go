@@ -283,7 +283,7 @@ func getPrestigeByIcon(levelIcon string) int {
 	levelIconID = strings.Replace(levelIconID, "_Border.png", "", -1)
 
 	rankMap := map[string]int{
-				# Bronze 0 - 5
+	    //# Bronze 0 - 5
 	    "0x0250000000000918": 0,
 	    "0x0250000000000919": 0,
 	    "0x025000000000091A": 0,
