@@ -16,5 +16,5 @@ deployment:
   hub:
     branch: master
     commands:
-      - docker login -u $GITLAB_USERNAME -p $GITLAB_PASSWORD registry.gitlab.com
+      - docker login -e $GITLAB_EMAIL -u $GITLAB_USERNAME -p $GITLAB_PASSWORD registry.gitlab.com
       - docker push registry.gitlab.com/sdwolfe32/ovrstat
