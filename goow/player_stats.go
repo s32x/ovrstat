@@ -62,7 +62,7 @@ type careerStats struct {
 }
 
 // GetPlayerStats gets all stats available for a player
-func GetPlayerStats(platform, region, tag string) (PlayerStats, error) {
+func GetPlayerStats(platform, region, tag string) (*PlayerStats, error) {
 	// Creates the profile url page based on platform
 	url := "https://playoverwatch.com/en-us/career/" + platform + "/" + region + "/" + tag
 	if platform != "pc" {
@@ -72,7 +72,7 @@ func GetPlayerStats(platform, region, tag string) (PlayerStats, error) {
 	// Performs the http request on the Overwatch website to retrieve all player info
 	playerDoc, err := goquery.NewDocument(url)
 	if err != nil {
-		return PlayerStats{}, err
+		return nil, err
 	}
 
 	// Scrapes all stats for passed player and sets struct member data
@@ -80,7 +80,7 @@ func GetPlayerStats(platform, region, tag string) (PlayerStats, error) {
 	ps.QuickPlayStats = parseDetailedStats(playerDoc.Find("div#quickplay").First())
 	ps.CompetitiveStats = parseDetailedStats(playerDoc.Find("div#competitive").First())
 
-	return ps, nil
+	return &ps, nil
 }
 
 // populateGeneralInfo populates the passed playerStats with generic play stats

@@ -1,20 +1,49 @@
 machine:
+  environment:
+    GODIST: "go1.7.3.linux-amd64.tar.gz"
+    DOCKER_TAG: "registry.gitlab.com/sdwolfe32/ovrstat"
+    IMPORT_PATH: "/home/ubuntu/.go_workspace/src/github.com/sdwolfe32"
+    APP_PATH: "$IMPORT_PATH/ovrstat"
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   services:
     - docker
+  post:
+    # Install Go 1.7.3
+    - mkdir -p download
+    - test -e download/$GODIST || curl -o download/$GODIST https://storage.googleapis.com/golang/$GODIST
+    - sudo rm -rf /usr/local/go
+    - sudo tar -C /usr/local -xzf download/$GODIST
+    # Install Glide
+    - sudo add-apt-repository ppa:masterminds/glide -y
+    - sudo apt-get update
+    - sudo apt-get install glide -y
 
 dependencies:
   override:
-    - docker info
-    - docker build -t registry.gitlab.com/sdwolfe32/ovrstat .
+    # Move repo to GOPATH
+    - mkdir -p $IMPORT_PATH
+    - ln -sf $(pwd) $APP_PATH
+    - cd "$APP_PATH" && glide install
+    # Build for linux
+    - env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v github.com/sdwolfe32/ovrstat
+    # Build Docker image and clean up binary
+    - docker build --no-cache -t $DOCKER_TAG .
+    - rm ovrstat
 
 test:
   override:
-    - docker run -d -p 7000:7000 --name ovrstatapi_container -e SEGMENT_API_KEY=$SEGMENT_API_KEY registry.gitlab.com/sdwolfe32/ovrstat; sleep 3
+    - docker info
+    # Run and test Docker image
+    - docker run -d -p 7000:7000 --name ovrstat $DOCKER_TAG; sleep 1
     - curl --retry 10 --retry-delay 5 -v http://localhost:7000/v1/stats/pc/us/Viz-1213
+    # Clean up docker image
+    - docker kill ovrstat
 
 deployment:
   hub:
     branch: master
     commands:
+      # Login and push the image to Gitlab registry
       - docker login -e $GITLAB_EMAIL -u $GITLAB_USERNAME -p $GITLAB_PASSWORD registry.gitlab.com
-      - docker push registry.gitlab.com/sdwolfe32/ovrstat
+      - docker push $DOCKER_TAG
