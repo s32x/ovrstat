@@ -12,7 +12,7 @@ import (
 
 // StatsService
 type StatsService interface {
-	GetStats(context.Context, getStatsRequest) (*getStatsResponse, error)
+	GetStats(context.Context, *getStatsRequest) (interface{}, error)
 }
 
 // statsService
@@ -22,14 +22,9 @@ type statsService struct {
 }
 
 // NewStatsService generates a new StatsService endpoint
-func NewStatsService(segmentAPIKey string) StatsService {
-	// Get segment API key for tracking API hits
-	var client *analytics.Client
-	if segmentAPIKey != "" {
-		client = analytics.New(segmentAPIKey)
-	}
+func NewStatsService(a *analytics.Client) StatsService {
 	return statsService{
-		analytics: client,
+		analytics: a,
 		// Retains cached stats for a minute. Flushes every 10 seconds
 		cache: cache.New(time.Minute, 10*time.Second),
 	}
@@ -48,7 +43,7 @@ type getStatsResponse struct {
 }
 
 // GetStats
-func (s statsService) GetStats(_ context.Context, req getStatsRequest) (*getStatsResponse, error) {
+func (s statsService) GetStats(_ context.Context, req *getStatsRequest) (interface{}, error) {
 	// Check for required fields before
 	if req.platform == "" || req.region == "" || req.tag == "" {
 		return nil, errors.New("Required fields are missing")
@@ -68,7 +63,7 @@ func (s statsService) GetStats(_ context.Context, req getStatsRequest) (*getStat
 	}
 
 	// Attempts to get the players stats from our in-memory cache
-	if x, found := s.cache.Get("foo"); found {
+	if x, found := s.cache.Get(req.platform + "/" + req.region + "/" + req.tag); found {
 		stats := x.(*goow.PlayerStats)
 		return &getStatsResponse{stats}, nil
 	}
@@ -85,7 +80,7 @@ func (s statsService) GetStats(_ context.Context, req getStatsRequest) (*getStat
 	}
 
 	// Stores the players stats to our in-memory cache
-	s.cache.Set("foo", stats, cache.DefaultExpiration)
+	s.cache.Set(req.platform+"/"+req.region+"/"+req.tag, stats, cache.DefaultExpiration)
 
 	// Return the stats data embedded in our getStatsResponse wrapper
 	return &getStatsResponse{stats}, nil
