@@ -16,7 +16,7 @@ docker info
 go version
 
 echo "Building binary for linux..."
-env GOOS=linux GOARCH=amd64 go build -v github.com/sdwolfe32/ovrstat
+env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v github.com/sdwolfe32/ovrstat
 
 echo "Building docker image..."
 docker build --no-cache -t ovrstat .
