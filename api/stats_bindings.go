@@ -32,5 +32,6 @@ func decodeGetStatsRequest(_ context.Context, r *http.Request) (interface{}, err
 
 // encodeResponse is responsible for encoding a new generic response
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(response)
 }
