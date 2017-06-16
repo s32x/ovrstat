@@ -8,24 +8,28 @@ ovrstat is a simple web scraper for the Overwatch stats site that parses and ser
 
 Note: As this is a web-scraping API I saw no reason to serve separate data across multiple requests. While caching could be an option to save bandwidth on your end, I didn't see any reason not to give you back as much information as we retrieve from Blizzard, thus there is only one endpoint currently.
 
+### Running with Docker
+```
+docker run sdwolfe32/ovrstat
+```
 ### Installing
-
 ```
 go get github.com/sdwolfe32/ovrstat/goow
 ```
-
 ### Usage
 
-You have two options for using the API, Either import the child dep used in this API or retrieve data from the public ovrstat api.
+You have two options for using the API, Either import the child dep used in this API or host your own ovrstat API using the public docker image `sdwolfe32/ovrstat`.
 
 Below is an example of using the REST endpoint:
 ```
-https://ovrstat.com/v1/stats/pc/us/Viz-1213
+http://localhost/v1/stats/pc/us/Viz-1213
+http://localhost/v1/stats/xbox/Viz-1213
 ```
 
 And here is an example of using the included go library:
 ```
-player, _ := goow.GetPlayerStats("pc", "us", "Viz-1213")
+player, _ := ovrstat.PCStats("us", "Viz-1213")
+player2, _ := ovrstat.ConsoleStats("xbox")
 ```
 Both above examples should return to you a PlayerStats struct containing detailed statistics for the specified Overwatch player.
 
@@ -37,21 +41,21 @@ package main
 import (
 	"log"
 
-	"github.com/sdwolfe32/ovrstat/goow"
+	"github.com/sdwolfe32/ovrstat/ovrstat"
 )
 
 func main() {
-	log.Println(goow.GetPlayerStats("pc", "us", "Viz-1213"))
+	log.Println(ovrstat.PCStats("us", "Viz-1213"))
 }
 ```
 
 ## Disclaimer
-goriot isn’t endorsed by Blizzard and doesn’t reflect the views or opinions of Blizzard or anyone officially involved in producing or managing Overwatch. Overwatch and Blizzard  are trademarks or registered trademarks of Blizzard Entertainment, Inc. Overwatch © Blizzard Entertainment, Inc.
+ovrstat isn’t endorsed by Blizzard and doesn’t reflect the views or opinions of Blizzard or anyone officially involved in producing or managing Overwatch. Overwatch and Blizzard  are trademarks or registered trademarks of Blizzard Entertainment, Inc. Overwatch © Blizzard Entertainment, Inc.
 
 The MIT License (MIT)
 =====================
 
-Copyright © 2016 Steven Wolfe
+Copyright © 2017 Steven Wolfe
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

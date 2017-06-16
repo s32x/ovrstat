@@ -1,5 +1,4 @@
-FROM alpine:3.4
+FROM alpine:latest
 RUN apk add --no-cache ca-certificates
-ADD ovrstat /usr/local/bin/ovrstat
-EXPOSE 7000
+ADD bin/ovrstat /usr/local/bin/ovrstat
 CMD ["ovrstat"]

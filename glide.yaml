@@ -1,7 +1,0 @@
-package: github.com/sdwolfe32/ovrstat
-import:
-- package: github.com/PuerkitoBio/goquery
-- package: github.com/gorilla/mux
-- package: github.com/go-kit/kit
-- package: github.com/segmentio/analytics-go
-- package: github.com/patrickmn/go-cache
