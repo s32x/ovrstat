@@ -18,12 +18,12 @@ go get github.com/sdwolfe32/ovrstat/goow
 ```
 ### Usage
 
-You have two options for using the API, Either import the child dep used in this API or host your own ovrstat API using the public docker image `sdwolfe32/ovrstat`.
+You have two options for using the API, Either import the child dependency used in this API, use the API we host on heroku, or host your own ovrstat API using the public docker image `sdwolfe32/ovrstat`.
 
 Below is an example of using the REST endpoint:
 ```
-http://localhost/v1/stats/pc/us/Viz-1213
-http://localhost/v1/stats/xbox/Viz-1213
+http://ovrstat.com/v1/stats/pc/us/Viz-1213
+http://ovrstat.com/v1/stats/xbox/Viz-1213
 ```
 
 And here is an example of using the included go library:

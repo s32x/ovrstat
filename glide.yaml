@@ -1,0 +1,4 @@
+package: github.com/sdwolfe32/ovrstat
+import:
+- package: github.com/PuerkitoBio/goquery
+- package: github.com/gorilla/mux
