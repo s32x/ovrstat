@@ -1,41 +1,30 @@
 package main
 
 import (
-	"log"
-	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
-	"github.com/sdwolfe32/ovrstat/ovrstat"
+	"github.com/sdwolfe32/ovrstat/service"
+	"github.com/sirupsen/logrus"
 )
 
-const prefix = "/v1/stats"
-
 func main() {
-	log.Println("Ovrstat 0.1 - Simple Overwatch Stats API")
+	log := logrus.New()
+	log.Formatter = new(logrus.JSONFormatter)
+	log.Info("Ovrstat 0.2 - Simple Overwatch Stats API")
 
 	// Retrieve the port from the environment
+	log.Info("Retrieving PORT from environment")
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80"
+		port = "8080"
 	}
 
-	// Set up the pc/console endpoints
-	r := mux.NewRouter()
-	r.Handle(prefix+"/pc/{region}/{tag}", endpointWrapper(pcHandler))
-	r.Handle(prefix+"/{platform}/{tag}", endpointWrapper(consoleHandler))
+	// Create a server Builder and bind the endpoints
+	log.Info("Binding HTTP endpoints to router")
+	b := service.NewBuilder(1, port)
+	service.BindEndpoints(b, log)
 
-	// Always run a basic http server
-	log.Printf("Listening on port %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
-}
-
-func pcHandler(r *http.Request) (interface{}, error) {
-	v := mux.Vars(r)
-	return ovrstat.PCStats(v["region"], v["tag"])
-}
-
-func consoleHandler(r *http.Request) (interface{}, error) {
-	v := mux.Vars(r)
-	return ovrstat.ConsoleStats(v["platform"], v["tag"])
+	// Listen on the specified port
+	log.Info("Listening and Serving on port " + port)
+	log.Fatal(b.ListenAndServe())
 }

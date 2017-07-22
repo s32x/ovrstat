@@ -1,17 +1,25 @@
-hash: 936e48484abf94a6f580d76d724848cd9708abda09c53cc6e1597a851ba08244
-updated: 2017-07-11T19:07:26.74276183-07:00
+hash: 4068ef9b0818aeddbfec81dfeb590cf57afa1c01b9576788c4d87a0ee56c5040
+updated: 2017-07-22T12:05:58.268889467-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 349dd0209470eabd9514242c688c403c0926d266
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/handlers
+  version: a4d79d4487c2430a17d9dc8a1f74d1a6ed6908ca
 - name: github.com/gorilla/mux
   version: ac112f7d75a0714af1bd86ab17749b31f7809640
 - name: github.com/PuerkitoBio/goquery
   version: 8806ada2a4ab225c06e9106f9631be80932db7ce
+- name: github.com/sirupsen/logrus
+  version: 3eef8ce63d02f65d2da43214faf7bb19b0b2bb7a
 - name: golang.org/x/net
-  version: f01ecb60fe3835d80d9a0b7b2bf24b228c89260e
+  version: ab5485076ff3407ad2d02db054635913f017b0ed
   subpackages:
   - html
   - html/atom
+- name: golang.org/x/sys
+  version: c4489faa6e5ab84c0ef40d6ee878f7a030281f0f
+  subpackages:
+  - unix
 testImports: []

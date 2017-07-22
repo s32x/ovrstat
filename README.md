@@ -4,7 +4,7 @@
 
 ![alt text](/img/ovrstatdarksmall.png "ovrstat")
 
-ovrstat is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Also included is goow, a binding used to retrieve the stats that can be used as an Overwatch API go dep.
+ovrstat is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary.
 
 Note: As this is a web-scraping API I saw no reason to serve separate data across multiple requests. While caching could be an option to save bandwidth on your end, I didn't see any reason not to give you back as much information as we retrieve from Blizzard, thus there is only one endpoint currently.
 
@@ -14,22 +14,24 @@ docker run sdwolfe32/ovrstat
 ```
 ### Installing
 ```
-go get github.com/sdwolfe32/ovrstat/goow
+go get github.com/sdwolfe32/ovrstat/ovrstat
 ```
 ### Usage
 
-You have two options for using the API, Either import the child dependency used in this API, use the API we host on heroku, or host your own ovrstat API using the public docker image `sdwolfe32/ovrstat`.
+You have two options for using the API, Either import the child dependency used in this API, use the API we host on Heroku, or host your own Ovrstat API using the public docker image `sdwolfe32/ovrstat`.
 
-Below is an example of using the REST endpoint:
+Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
-http://ovrstat.com/v1/stats/pc/us/Viz-1213
-http://ovrstat.com/v1/stats/xbox/Viz-1213
+https://ovrstat.com/v1/pc/us/Viz-1213
+https://ovrstat.com/v1/xbl/Lt%20Evolution
+https://ovrstat.com/v1/psn/TayuyaBreast
 ```
 
 And here is an example of using the included go library:
 ```
 player, _ := ovrstat.PCStats("us", "Viz-1213")
-player2, _ := ovrstat.ConsoleStats("xbox")
+player2, _ := ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution")
+player3, _ := ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast")
 ```
 Both above examples should return to you a PlayerStats struct containing detailed statistics for the specified Overwatch player.
 
@@ -46,6 +48,8 @@ import (
 
 func main() {
 	log.Println(ovrstat.PCStats("us", "Viz-1213"))
+	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution"))
+	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast"))
 }
 ```
 

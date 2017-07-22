@@ -1,7 +1,9 @@
 package ovrstat
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,7 +13,13 @@ import (
 )
 
 const (
-	baseURL = "https://playoverwatch.com/en-us/career"
+	PlatformXBL = "xbl"
+	PlatformPSN = "psn"
+)
+
+var (
+	baseURL        = "https://playoverwatch.com/en-us/career"
+	PlayerNotFound = errors.New("Player not found")
 )
 
 // PCStats retrieves player stats for PC
@@ -27,7 +35,18 @@ func ConsoleStats(platform, tag string) (*PlayerStats, error) {
 // playerStats retrieves all Overwatch statistics for a given player
 func playerStats(profilePath string) (*PlayerStats, error) {
 	// Performs the stats request
-	pd, err := goquery.NewDocument(baseURL + profilePath)
+	res, err := http.Get(baseURL + profilePath)
+	if err != nil {
+		return nil, err
+	}
+
+	// If the response is a 404 return that error
+	if res.StatusCode >= 400 {
+		return nil, PlayerNotFound
+	}
+
+	// Parses the stats request into a goquery document
+	pd, err := goquery.NewDocumentFromResponse(res)
 	if err != nil {
 		return nil, err
 	}
