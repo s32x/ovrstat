@@ -15,8 +15,8 @@ type Service struct{ log *logrus.Entry }
 // passed Builders mux.Router
 func BindEndpoints(b *Builder, log *logrus.Logger) {
 	s := &Service{log: log.WithField("service", "ovrstat")}
-	b.HandleEndpoint("/pc/{region}/{tag}", s.pcHandler)
-	b.HandleEndpoint("/{platform}/{tag}", s.consoleHandler)
+	b.HandleEndpoint("/stats/pc/{region}/{tag}", s.pcHandler)
+	b.HandleEndpoint("/stats/{platform}/{tag}", s.consoleHandler)
 }
 
 // pcHandler handles serving Overwatch stats data for PC
