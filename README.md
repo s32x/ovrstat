@@ -22,9 +22,9 @@ You have two options for using the API, Either import the child dependency used 
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
-https://ovrstat.com/v1/pc/us/Viz-1213
-https://ovrstat.com/v1/xbl/Lt%20Evolution
-https://ovrstat.com/v1/psn/TayuyaBreast
+https://ovrstat.com/v1/stats/pc/us/Viz-1213
+https://ovrstat.com/v1/stats/xbl/Lt%20Evolution
+https://ovrstat.com/v1/stats/psn/TayuyaBreast
 ```
 
 And here is an example of using the included go library:
