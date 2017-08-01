@@ -40,8 +40,8 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 		return nil, err
 	}
 
-	// If the response is a 404 return that error
-	if res.StatusCode >= 400 {
+	// If the response is a 200 return an error
+	if res.StatusCode != 200 {
 		return nil, PlayerNotFound
 	}
 
@@ -84,33 +84,6 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 // parseDetailedStats populates the passed stats collection with detailed statistics
 func parseDetailedStats(playModeSelector *goquery.Selection) statsCollection {
 	var sc statsCollection
-
-	// Populates all detailed basic stats for the player
-	playModeSelector.Find("li.column").Each(func(i int, statSel *goquery.Selection) {
-		statType := statSel.Find("p.card-copy").First().Text()
-		statType = strings.Replace(strings.ToLower(statType), " - average", "", -1)
-		statVal := strings.Replace(statSel.Find("h3.card-heading").Text(), ",", "", -1)
-
-		switch statType {
-		case "eliminations":
-			sc.EliminationsAvg, _ = strconv.ParseFloat(statVal, 64)
-		case "damage done":
-			sc.DamageDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
-		case "deaths":
-			sc.DeathsAvg, _ = strconv.ParseFloat(statVal, 64)
-		case "final blows":
-			sc.FinalBlowsAvg, _ = strconv.ParseFloat(statVal, 64)
-		case "healing done":
-			sc.HealingDoneAvg, _ = strconv.ParseInt(statVal, 10, 64)
-		case "objective kills":
-			sc.ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
-		case "objective time":
-			sc.ObjectiveTimeAvg = statVal
-		case "solo kills":
-			sc.SoloKillsAvg, _ = strconv.ParseFloat(statVal, 64)
-		}
-	})
-
 	sc.TopHeros = parseHeroStats(playModeSelector.Find("section.hero-comparison-section").First())
 	sc.CareerStats = parseCareerStats(playModeSelector.Find("section.career-stats-section").First())
 	return sc
@@ -147,7 +120,7 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 			case "346":
 				bhsMap[heroName].MultiKillBest, _ = strconv.Atoi(statVal)
 			case "39C":
-				bhsMap[heroName].ObjectiveKillsAvg, _ = strconv.ParseFloat(statVal, 64)
+				bhsMap[heroName].ObjectiveKills, _ = strconv.ParseFloat(statVal, 64)
 			}
 		})
 	})
@@ -160,7 +133,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 
 	heroMap := make(map[string]string)
 	// Populates tempHeroMap to match hero ID to name in second scrape
-	careerStatsSelector.Find("select.js-career-select option").Each(func(i int, heroSel *goquery.Selection) {
+	careerStatsSelector.Find("select option").Each(func(i int, heroSel *goquery.Selection) {
 		heroVal, _ := heroSel.Attr("value")
 		heroMap[heroVal] = heroSel.Text()
 	})
@@ -197,49 +170,49 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 						switch statType {
 						case "assists":
 							if csMap[currentHero].Assists == nil {
-								csMap[currentHero].Assists = make(map[string]string)
+								csMap[currentHero].Assists = make(map[string]interface{})
 							}
-							csMap[currentHero].Assists[statKey] = statVal
+							csMap[currentHero].Assists[statKey] = parseType(statVal)
 						case "average":
 							if csMap[currentHero].Average == nil {
-								csMap[currentHero].Average = make(map[string]string)
+								csMap[currentHero].Average = make(map[string]interface{})
 							}
-							csMap[currentHero].Average[statKey] = statVal
+							csMap[currentHero].Average[statKey] = parseType(statVal)
 						case "best":
 							if csMap[currentHero].Best == nil {
-								csMap[currentHero].Best = make(map[string]string)
+								csMap[currentHero].Best = make(map[string]interface{})
 							}
-							csMap[currentHero].Best[statKey] = statVal
+							csMap[currentHero].Best[statKey] = parseType(statVal)
 						case "combat":
 							if csMap[currentHero].Combat == nil {
-								csMap[currentHero].Combat = make(map[string]string)
+								csMap[currentHero].Combat = make(map[string]interface{})
 							}
-							csMap[currentHero].Combat[statKey] = statVal
+							csMap[currentHero].Combat[statKey] = parseType(statVal)
 						case "deaths":
 							if csMap[currentHero].Deaths == nil {
-								csMap[currentHero].Deaths = make(map[string]string)
+								csMap[currentHero].Deaths = make(map[string]interface{})
 							}
-							csMap[currentHero].Deaths[statKey] = statVal
+							csMap[currentHero].Deaths[statKey] = parseType(statVal)
 						case "hero specific":
 							if csMap[currentHero].HeroSpecific == nil {
-								csMap[currentHero].HeroSpecific = make(map[string]string)
+								csMap[currentHero].HeroSpecific = make(map[string]interface{})
 							}
-							csMap[currentHero].HeroSpecific[statKey] = statVal
+							csMap[currentHero].HeroSpecific[statKey] = parseType(statVal)
 						case "game":
 							if csMap[currentHero].Game == nil {
-								csMap[currentHero].Game = make(map[string]string)
+								csMap[currentHero].Game = make(map[string]interface{})
 							}
-							csMap[currentHero].Game[statKey] = statVal
+							csMap[currentHero].Game[statKey] = parseType(statVal)
 						case "match awards":
 							if csMap[currentHero].MatchAwards == nil {
-								csMap[currentHero].MatchAwards = make(map[string]string)
+								csMap[currentHero].MatchAwards = make(map[string]interface{})
 							}
-							csMap[currentHero].MatchAwards[statKey] = statVal
+							csMap[currentHero].MatchAwards[statKey] = parseType(statVal)
 						case "miscellaneous":
 							if csMap[currentHero].Miscellaneous == nil {
-								csMap[currentHero].Miscellaneous = make(map[string]string)
+								csMap[currentHero].Miscellaneous = make(map[string]interface{})
 							}
-							csMap[currentHero].Miscellaneous[statKey] = statVal
+							csMap[currentHero].Miscellaneous[statKey] = parseType(statVal)
 						}
 					}
 				})
@@ -247,6 +220,18 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 		})
 	})
 	return csMap
+}
+
+func parseType(val string) interface{} {
+	i, err := strconv.Atoi(val)
+	if err == nil {
+		return i
+	}
+	f, err := strconv.ParseFloat(val, 64)
+	if err == nil {
+		return f
+	}
+	return val
 }
 
 func getPrestigeByIcon(levelIcon string) int {

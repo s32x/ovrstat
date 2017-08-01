@@ -17,16 +17,8 @@ type PlayerStats struct {
 
 // statsCollection holds a collection of stats for a particular player
 type statsCollection struct {
-	EliminationsAvg   float64                  `json:"eliminationsAvg"`
-	DamageDoneAvg     int64                    `json:"damageDoneAvg"`
-	DeathsAvg         float64                  `json:"deathsAvg"`
-	FinalBlowsAvg     float64                  `json:"finalBlowsAvg"`
-	HealingDoneAvg    int64                    `json:"healingDoneAvg"`
-	ObjectiveKillsAvg float64                  `json:"objectiveKillsAvg"`
-	ObjectiveTimeAvg  string                   `json:"objectiveTimeAvg"`
-	SoloKillsAvg      float64                  `json:"soloKillsAvg"`
-	TopHeros          map[string]*topHeroStats `json:"topHeros"`
-	CareerStats       map[string]*careerStats  `json:"careerStats"`
+	TopHeros    map[string]*topHeroStats `json:"topHeros"`
+	CareerStats map[string]*careerStats  `json:"careerStats"`
 }
 
 // topHeroStats holds basic stats for each hero
@@ -37,18 +29,18 @@ type topHeroStats struct {
 	WeaponAccuracy      int     `json:"weaponAccuracy"`
 	EliminationsPerLife float64 `json:"eliminationsPerLife"`
 	MultiKillBest       int     `json:"multiKillBest"`
-	ObjectiveKillsAvg   float64 `json:"objectiveKillsAvg"`
+	ObjectiveKills      float64 `json:"objectiveKills"`
 }
 
 // careerStats holds very detailed stats for each hero
 type careerStats struct {
-	Assists       map[string]string `json:"assists,omitempty"`
-	Average       map[string]string `json:"average,omitempty"`
-	Best          map[string]string `json:"best,omitempty"`
-	Combat        map[string]string `json:"combat,omitempty"`
-	Deaths        map[string]string `json:"deaths,omitempty"`
-	HeroSpecific  map[string]string `json:"heroSpecific,omitempty"`
-	Game          map[string]string `json:"game,omitempty"`
-	MatchAwards   map[string]string `json:"matchAwards,omitempty"`
-	Miscellaneous map[string]string `json:"miscellaneous,omitempty"`
+	Assists       map[string]interface{} `json:"assists,omitempty"`
+	Average       map[string]interface{} `json:"average,omitempty"`
+	Best          map[string]interface{} `json:"best,omitempty"`
+	Combat        map[string]interface{} `json:"combat,omitempty"`
+	Deaths        map[string]interface{} `json:"deaths,omitempty"`
+	HeroSpecific  map[string]interface{} `json:"heroSpecific,omitempty"`
+	Game          map[string]interface{} `json:"game,omitempty"`
+	MatchAwards   map[string]interface{} `json:"matchAwards,omitempty"`
+	Miscellaneous map[string]interface{} `json:"miscellaneous,omitempty"`
 }
