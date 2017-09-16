@@ -157,7 +157,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 				statSel.Find("td").Each(func(i4 int, statKV *goquery.Selection) {
 					switch i4 {
 					case 0:
-						statKey = cleanJSONKey(statKV.Text())
+						statKey = transformKey(cleanJSONKey(statKV.Text()))
 					case 1:
 						statVal = strings.Replace(statKV.Text(), ",", "", -1) // Removes commas from 1k+ values
 
@@ -243,9 +243,13 @@ func getPrestigeByIcon(levelIcon string) int {
 	return rankMap[string(iconID[1])]
 }
 
+var (
+	keyReplacer = strings.NewReplacer("-", " ", ".", " ", ":", " ", "'", "", "ú", "u", "ö", "o")
+)
+
 // cleanJSONKey
 func cleanJSONKey(str string) string {
-	str = strings.Replace(str, "-", " ", -1) // Removes all dashes from titles
+	str = keyReplacer.Replace(str) // Removes all dashes, dots, and colons from titles
 	str = strings.ToLower(str)
 	str = strings.Title(str)                // Uppercases lowercase leading characters
 	str = strings.Replace(str, " ", "", -1) // Removes Spaces
