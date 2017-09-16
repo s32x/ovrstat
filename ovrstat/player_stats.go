@@ -145,7 +145,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 
 		// Iterates over every stat box
 		heroStatsSel.Find("div.column.xs-12").Each(func(i2 int, statBoxSel *goquery.Selection) {
-			statType := statBoxSel.Find("span.stat-title").Text()
+			statType := statBoxSel.Find(".stat-title").Text()
 			statType = cleanJSONKey(statType)
 
 			// Iterates over stat row
