@@ -84,7 +84,7 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 // parseDetailedStats populates the passed stats collection with detailed statistics
 func parseDetailedStats(playModeSelector *goquery.Selection) statsCollection {
 	var sc statsCollection
-	sc.TopHeros = parseHeroStats(playModeSelector.Find("section.hero-comparison-section").First())
+	sc.TopHeroes = parseHeroStats(playModeSelector.Find("section.hero-comparison-section").First())
 	sc.CareerStats = parseCareerStats(playModeSelector.Find("section.career-stats-section").First())
 	return sc
 }

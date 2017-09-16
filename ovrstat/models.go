@@ -17,7 +17,7 @@ type PlayerStats struct {
 
 // statsCollection holds a collection of stats for a particular player
 type statsCollection struct {
-	TopHeros    map[string]*topHeroStats `json:"topHeros"`
+	TopHeroes   map[string]*topHeroStats `json:"topHeroes"`
 	CareerStats map[string]*careerStats  `json:"careerStats"`
 }
 
