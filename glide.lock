@@ -1,5 +1,5 @@
-hash: 4068ef9b0818aeddbfec81dfeb590cf57afa1c01b9576788c4d87a0ee56c5040
-updated: 2017-07-27T23:05:56.256041473-07:00
+hash: ea7497b43afee00ed76137fc7bdb9a6e90bab97e1dad925f22dc8d74b225a512
+updated: 2017-09-16T18:36:21.6207022-04:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 349dd0209470eabd9514242c688c403c0926d266
@@ -9,6 +9,8 @@ imports:
   version: a4d79d4487c2430a17d9dc8a1f74d1a6ed6908ca
 - name: github.com/gorilla/mux
   version: ac112f7d75a0714af1bd86ab17749b31f7809640
+- name: github.com/jinzhu/inflection
+  version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/PuerkitoBio/goquery
   version: 8806ada2a4ab225c06e9106f9631be80932db7ce
 - name: github.com/sirupsen/logrus
