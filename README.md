@@ -10,7 +10,7 @@ Note: As this is a web-scraping API I saw no reason to serve separate data acros
 
 ### Running with Docker
 ```
-docker run sdwolfe32/ovrstat
+docker run -p 8000:8000 sdwolfe32/ovrstat
 ```
 ### Installing
 ```
@@ -54,7 +54,7 @@ func main() {
 ```
 
 ## Disclaimer
-ovrstat isn’t endorsed by Blizzard and doesn’t reflect the views or opinions of Blizzard or anyone officially involved in producing or managing Overwatch. Overwatch and Blizzard  are trademarks or registered trademarks of Blizzard Entertainment, Inc. Overwatch © Blizzard Entertainment, Inc.
+ovrstat isn’t endorsed by Blizzard and doesn’t reflect the views or opinions of Blizzard or anyone officially involved in producing or managing Overwatch. Overwatch and Blizzard are trademarks or registered trademarks of Blizzard Entertainment, Inc. Overwatch © Blizzard Entertainment, Inc.
 
 The MIT License (MIT)
 =====================

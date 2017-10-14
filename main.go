@@ -1,10 +1,11 @@
 package main
 
 import (
+	"net/http"
 	"os"
 
-	"github.com/sdwolfe32/ovrstat/service"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
+	"github.com/sdwolfe32/ovrstat/api"
 )
 
 func main() {
@@ -16,15 +17,17 @@ func main() {
 	log.Info("Retrieving PORT from environment")
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8000"
 	}
 
 	// Create a server Builder and bind the endpoints
 	log.Info("Binding HTTP endpoints to router")
-	b := service.NewBuilder(1, port)
-	service.BindEndpoints(b, log)
+	r := api.NewRouter(1)
+	o := api.NewOvrstater(log)
+	r.HandleEndpoint("/stats/pc/{region}/{tag}", o.PCStats).Methods(http.MethodGet)
+	r.HandleEndpoint("/stats/{platform}/{tag}", o.ConsoleStats).Methods(http.MethodGet)
 
 	// Listen on the specified port
 	log.Info("Listening and Serving on port " + port)
-	log.Fatal(b.ListenAndServe())
+	log.Fatal(r.ListenAndServe(port))
 }

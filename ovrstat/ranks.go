@@ -1,5 +1,6 @@
 package ovrstat
 
+// rankMap contains all mappings for Overwatch competitive ranks
 var rankMap = map[string]int{
 	// Bronze 0 - 5
 	"918": 0,

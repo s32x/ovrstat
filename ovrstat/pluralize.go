@@ -1,32 +1,31 @@
 package ovrstat
 
 import (
+	"sort"
 	"strings"
 	"unicode"
-	"sort"
+
 	"github.com/jinzhu/inflection"
 )
 
-var (
-	keywords = []string{
-		"kill",
-		"multikill",
-		"death",
-		"generator",
-		"shield",
-		"enemy",
-		"turret",
-		"hit",
-		"pad",
-		"blow",
-		"assist",
-		"elimination",
-		"card",
-		"dragonblade",
-		"player",
-		"bomb",
-	}
-)
+var keywords = []string{
+	"kill",
+	"multikill",
+	"death",
+	"generator",
+	"shield",
+	"enemy",
+	"turret",
+	"hit",
+	"pad",
+	"blow",
+	"assist",
+	"elimination",
+	"card",
+	"dragonblade",
+	"player",
+	"bomb",
+}
 
 func transformKey(str string) string {
 	split := splitKeywords(str)

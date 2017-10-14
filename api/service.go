@@ -1,27 +1,30 @@
-package service
+package api
 
 import (
 	"net/http"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"github.com/sdwolfe32/ovrstat/ovrstat"
-	"github.com/sirupsen/logrus"
 )
 
-// Service contains all required context needed to serve Ovrstat requests
-type Service struct{ log *logrus.Entry }
-
-// BindEndpoints binds the endpoints needed to serve ovrstat data to the
-// passed Builders mux.Router
-func BindEndpoints(b *Builder, log *logrus.Logger) {
-	s := &Service{log: log.WithField("service", "ovrstat")}
-	b.HandleEndpoint("/stats/pc/{region}/{tag}", s.pcHandler)
-	b.HandleEndpoint("/stats/{platform}/{tag}", s.consoleHandler)
+// Ovrstater defines all functionality for serving Overwatch stats
+type Ovrstater interface {
+	PCStats(r *http.Request) (interface{}, error)
+	ConsoleStats(r *http.Request) (interface{}, error)
 }
 
-// pcHandler handles serving Overwatch stats data for PC
-func (s *Service) pcHandler(r *http.Request) (interface{}, error) {
-	l := s.log.WithField("handler", "pc").WithField("ip_address", r.RemoteAddr)
+// Service contains all required context needed to serve Ovrstat requests
+type ovrstater struct{ log *logrus.Entry }
+
+// NewOvrstater initializes a new Ovrstater interface
+func NewOvrstater(log *logrus.Logger) Ovrstater {
+	return &ovrstater{log: log.WithField("service", "ovrstat")}
+}
+
+// PCStats handles serving Overwatch stats data for PC
+func (o *ovrstater) PCStats(r *http.Request) (interface{}, error) {
+	l := o.log.WithField("handler", "pc").WithField("ip_address", r.RemoteAddr)
 	l.Info("New PC Stats request received")
 
 	// Extracts request variables
@@ -29,8 +32,8 @@ func (s *Service) pcHandler(r *http.Request) (interface{}, error) {
 	v := mux.Vars(r)
 	region, tag := v["region"], v["tag"]
 
-	// Verifies request variables
-	l.Info("Verifying existance of required variables")
+	// Verifies request variables exist
+	l.Info("Verifying existence of required variables")
 	if region == "" || tag == "" {
 		l.Error("Missing required variables")
 		return nil, ErrorBadRequest
@@ -45,8 +48,9 @@ func (s *Service) pcHandler(r *http.Request) (interface{}, error) {
 			l.WithError(err).Error("Player not found")
 			return nil, ErrorNotFound
 		}
-		l.WithError(err).Error("An error occured during lookup")
-		return nil, NewError(err.Error(), http.StatusInternalServerError)
+		l.WithError(err).Error("An error occurred during lookup")
+		return nil, NewError("An internal error occurred",
+			http.StatusInternalServerError, err)
 	}
 
 	// Returns the successful stats lookup
@@ -54,9 +58,9 @@ func (s *Service) pcHandler(r *http.Request) (interface{}, error) {
 	return stats, nil
 }
 
-// consoleHandler handles serving Overwatch stats data for Console
-func (s *Service) consoleHandler(r *http.Request) (interface{}, error) {
-	l := s.log.WithField("handler", "console").WithField("ip_address", r.RemoteAddr)
+// ConsoleStats handles serving Overwatch stats data for Console
+func (o *ovrstater) ConsoleStats(r *http.Request) (interface{}, error) {
+	l := o.log.WithField("handler", "console").WithField("ip_address", r.RemoteAddr)
 	l.Info("New Console Stats request received")
 
 	// Extracts request variables
@@ -64,8 +68,8 @@ func (s *Service) consoleHandler(r *http.Request) (interface{}, error) {
 	v := mux.Vars(r)
 	platform, tag := v["platform"], v["tag"]
 
-	// Verifies request variables
-	l.Info("Verifying existance of required variables")
+	// Verifies request variables exist
+	l.Info("Verifying existence of required variables")
 	if platform == "" || tag == "" {
 		l.Error("Missing required variables")
 		return nil, ErrorBadRequest
@@ -80,8 +84,9 @@ func (s *Service) consoleHandler(r *http.Request) (interface{}, error) {
 			l.WithError(err).Error("Player not found")
 			return nil, ErrorNotFound
 		}
-		l.WithError(err).Error("An error occured during lookup")
-		return nil, NewError(err.Error(), http.StatusInternalServerError)
+		l.WithError(err).Error("An error occurred during lookup")
+		return nil, NewError("An error occurred during lookup",
+			http.StatusInternalServerError, err)
 	}
 
 	// Returns the successful stats lookup
