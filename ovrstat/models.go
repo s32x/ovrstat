@@ -24,6 +24,7 @@ type statsCollection struct {
 // topHeroStats holds basic stats for each hero
 type topHeroStats struct {
 	TimePlayed          string  `json:"timePlayed"`
+	TimePlayedInSeconds int     `json:"timePlayedInSeconds"`
 	GamesWon            int     `json:"gamesWon"`
 	WinPercentage       int     `json:"winPercentage"`
 	WeaponAccuracy      int     `json:"weaponAccuracy"`
