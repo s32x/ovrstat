@@ -108,6 +108,25 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 			// Sets hero stats based on stat category type
 			switch categoryID {
 			case "021":
+				// Time played in seconds
+				time := strings.Split(statVal, " ")
+				if len(time) == 2 {
+					digit, err := strconv.ParseInt(time[0], 10, 32)
+					if err != nil {
+						bhsMap[heroName].TimePlayedInSeconds = 0;
+					}
+
+					if strings.HasPrefix(time[1], "second") {
+						bhsMap[heroName].TimePlayedInSeconds = int(digit)
+					}
+					if strings.HasPrefix(time[1], "minute") {
+						bhsMap[heroName].TimePlayedInSeconds = int(digit * 60)
+					}
+					if strings.HasPrefix(time[1], "hour") {
+						bhsMap[heroName].TimePlayedInSeconds = int(digit * 60 * 60)
+					}
+				}
+
 				bhsMap[heroName].TimePlayed = statVal
 			case "039":
 				bhsMap[heroName].GamesWon, _ = strconv.Atoi(statVal)
