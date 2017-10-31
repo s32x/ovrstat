@@ -50,6 +50,8 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
+	
+	defer res.Body.Close()
 
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
