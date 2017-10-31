@@ -36,6 +36,10 @@ func ConsoleStats(platform, tag string) (*PlayerStats, error) {
 func playerStats(profilePath string) (*PlayerStats, error) {
 	// Performs the stats request
 	res, err := http.Get(baseURL + profilePath)
+	if res != nil {
+		defer res.Body.Close()
+	}	
+	
 	if err != nil {
 		return nil, err
 	}
@@ -50,8 +54,6 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
-	
-	defer res.Body.Close()
 
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
