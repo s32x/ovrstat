@@ -215,7 +215,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 								csMap[currentHero].Deaths = make(map[string]interface{})
 							}
 							csMap[currentHero].Deaths[statKey] = parseType(statVal)
-						case "hero specific":
+						case "heroSpecific":
 							if csMap[currentHero].HeroSpecific == nil {
 								csMap[currentHero].HeroSpecific = make(map[string]interface{})
 							}
@@ -225,7 +225,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 								csMap[currentHero].Game = make(map[string]interface{})
 							}
 							csMap[currentHero].Game[statKey] = parseType(statVal)
-						case "match awards":
+						case "matchAwards":
 							if csMap[currentHero].MatchAwards == nil {
 								csMap[currentHero].MatchAwards = make(map[string]interface{})
 							}
