@@ -22,9 +22,9 @@ You have two options for using the API, Either import the child dependency used 
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
-http://ovrstat.com/v1/stats/pc/us/Viz-1213
-http://ovrstat.com/v1/stats/xbl/Lt%20Evolution
-http://ovrstat.com/v1/stats/psn/TayuyaBreast
+https://ovrstat.com/stats/pc/us/Viz-1213
+https://ovrstat.com/stats/xbl/Lt%20Evolution
+https://ovrstat.com/stats/psn/TayuyaBreast
 ```
 
 And here is an example of using the included go library:
@@ -59,7 +59,7 @@ ovrstat isn’t endorsed by Blizzard and doesn’t reflect the views or opinions
 The MIT License (MIT)
 =====================
 
-Copyright © 2017 Steven Wolfe
+Copyright © 2018 Steven Wolfe
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

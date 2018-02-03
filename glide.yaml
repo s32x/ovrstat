@@ -2,6 +2,6 @@ package: github.com/sdwolfe32/ovrstat
 import:
 - package: github.com/PuerkitoBio/goquery
 - package: github.com/Sirupsen/logrus
-- package: github.com/gorilla/handlers
 - package: github.com/gorilla/mux
 - package: github.com/jinzhu/inflection
+- package: github.com/sdwolfe32/slimhttp

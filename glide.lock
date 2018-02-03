@@ -1,31 +1,33 @@
-hash: 3f0945e8ddc45cbdf7b669f4e7301040b42db66fb2b26006b5ba1c25ce7f9f30
-updated: 2017-10-14T11:05:10.174699-07:00
+hash: 544c6ca0701caa545c99a3bdf706d49d0f969766d0ed2000cce06907f0e110dd
+updated: 2018-02-02T17:17:49.891033-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 349dd0209470eabd9514242c688c403c0926d266
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/handlers
-  version: a4d79d4487c2430a17d9dc8a1f74d1a6ed6908ca
+  version: 90663712d74cb411cbef281bc1e08c19d1a76145
 - name: github.com/gorilla/mux
-  version: 9bd9ff2d1d2a0660d35050674f2c3112547997af
+  version: c0091a029979286890368b4c7b301261e448e242
 - name: github.com/jinzhu/inflection
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/PuerkitoBio/goquery
-  version: 1a71cc719d0d5b9e4f14ae072bef08b576b0bab5
+  version: 09540e565986583836b5fc792fe951ec5fd201dd
+- name: github.com/sdwolfe32/slimhttp
+  version: f6951ac3e422693adab4d2cf25c7f4607f2ec01b
 - name: github.com/Sirupsen/logrus
-  version: 89742aefa4b206dcf400792f3bd35b542998eb3b
+  version: 768a92a02685ee7535069fc1581341b41bab9b72
 - name: golang.org/x/crypto
-  version: 9419663f5a44be8b34ca85f08abc5fe1be11f8a3
+  version: 1875d0a70c90e57f11972aefd42276df65e895b9
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
-  version: a04bdaca5b32abe1c069418fb7088ae607de5bd0
+  version: 2fb46b16b8dda405028c50f7c7f0f9dd1fa6bfb1
   subpackages:
   - html
   - html/atom
 - name: golang.org/x/sys
-  version: 686000749eaec0b8855b8eef5336cf63899fe51d
+  version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
   subpackages:
   - unix
   - windows
