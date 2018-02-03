@@ -19,8 +19,10 @@ func main() {
 	logger.Info("Binding HTTP endpoints to router")
 	r := slimhttp.NewRouter()
 	o := api.NewOvrstatService(logger)
+	h := slimhttp.NewHealthcheckService(logger, "ovrstat.com")
 	r.HandleJSONEndpoint("/stats/pc/{region}/{tag}", o.PCStats).Methods(http.MethodGet)
 	r.HandleJSONEndpoint("/stats/{platform}/{tag}", o.ConsoleStats).Methods(http.MethodGet)
+	r.HandleJSONEndpoint("/healthcheck", h.Healthcheck).Methods(http.MethodGet)
 
 	// Listen on the specified port
 	port := getEnv("PORT", "8000")
