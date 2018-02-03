@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/sdwolfe32/ovrstat/api"
@@ -25,8 +26,8 @@ func main() {
 	r.HandleJSONEndpoint("/healthcheck", h.Healthcheck).Methods(http.MethodGet)
 
 	// Listen on the specified port
-	port := getEnv("PORT", "8000")
-	logger.Info("Listening and Serving on port " + port)
+	port, _ := strconv.Atoi(getEnv("PORT", "8000"))
+	logger.Infof("Listening and Serving on port %v", port)
 	logger.Fatal(r.ListenAndServe(port))
 }
 

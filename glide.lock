@@ -1,12 +1,10 @@
 hash: 544c6ca0701caa545c99a3bdf706d49d0f969766d0ed2000cce06907f0e110dd
-updated: 2018-02-02T17:17:49.891033-07:00
+updated: 2018-02-03T13:55:25.045636-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 349dd0209470eabd9514242c688c403c0926d266
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
-- name: github.com/gorilla/handlers
-  version: 90663712d74cb411cbef281bc1e08c19d1a76145
 - name: github.com/gorilla/mux
   version: c0091a029979286890368b4c7b301261e448e242
 - name: github.com/jinzhu/inflection
@@ -14,12 +12,14 @@ imports:
 - name: github.com/PuerkitoBio/goquery
   version: 09540e565986583836b5fc792fe951ec5fd201dd
 - name: github.com/sdwolfe32/slimhttp
-  version: f6951ac3e422693adab4d2cf25c7f4607f2ec01b
+  version: cfaa5bd617e5a45c714453cdd06e8241a5270a07
 - name: github.com/Sirupsen/logrus
   version: 768a92a02685ee7535069fc1581341b41bab9b72
 - name: golang.org/x/crypto
   version: 1875d0a70c90e57f11972aefd42276df65e895b9
   subpackages:
+  - acme
+  - acme/autocert
   - ssh/terminal
 - name: golang.org/x/net
   version: 2fb46b16b8dda405028c50f7c7f0f9dd1fa6bfb1
