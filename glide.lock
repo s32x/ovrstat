@@ -1,5 +1,5 @@
-hash: 544c6ca0701caa545c99a3bdf706d49d0f969766d0ed2000cce06907f0e110dd
-updated: 2018-02-03T13:55:25.045636-07:00
+hash: 4965901026008e04a8318158997fa1f7125925dbbda779005eafda4b7dd5c675
+updated: 2018-02-03T22:14:24.842782-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 349dd0209470eabd9514242c688c403c0926d266
@@ -12,8 +12,8 @@ imports:
 - name: github.com/PuerkitoBio/goquery
   version: 09540e565986583836b5fc792fe951ec5fd201dd
 - name: github.com/sdwolfe32/slimhttp
-  version: cfaa5bd617e5a45c714453cdd06e8241a5270a07
-- name: github.com/Sirupsen/logrus
+  version: 64aa00fe85deb805b214f66ee617439245d7a6ab
+- name: github.com/sirupsen/logrus
   version: 768a92a02685ee7535069fc1581341b41bab9b72
 - name: golang.org/x/crypto
   version: 1875d0a70c90e57f11972aefd42276df65e895b9

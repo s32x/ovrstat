@@ -5,9 +5,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/sdwolfe32/ovrstat/api"
 	"github.com/sdwolfe32/slimhttp"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

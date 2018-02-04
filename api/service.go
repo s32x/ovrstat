@@ -3,10 +3,10 @@ package api
 import (
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"github.com/sdwolfe32/ovrstat/ovrstat"
 	"github.com/sdwolfe32/slimhttp"
+	"github.com/sirupsen/logrus"
 )
 
 // OvrstatService defines all functionality for serving
