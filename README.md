@@ -28,7 +28,7 @@ https://ovrstat.com/stats/psn/TayuyaBreast
 ```
 
 And here is an example of using the included go library:
-```
+```go
 player, _ := ovrstat.PCStats("us", "Viz-1213")
 player2, _ := ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution")
 player3, _ := ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast")
@@ -37,7 +37,7 @@ Both above examples should return to you a PlayerStats struct containing detaile
 
 ## Full Go example
 
-```
+```go
 package main
 
 import (
