@@ -32,6 +32,12 @@ func ConsoleStats(platform, tag string) (*PlayerStats, error) {
 	return playerStats(fmt.Sprintf("/%s/%s", platform, tag))
 }
 
+// Stats retrieves player stats
+// Universal method if you don't need to differentiate it
+func Stats(regionOrPlatform, tag string) (*PlayerStats, error) {
+	return playerStats(fmt.Sprintf("/%s/%s", regionOrPlatform, tag))
+}
+
 // playerStats retrieves all Overwatch statistics for a given player
 func playerStats(profilePath string) (*PlayerStats, error) {
 	// Performs the stats request
