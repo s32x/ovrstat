@@ -271,6 +271,15 @@ var (
 
 // cleanJSONKey
 func cleanJSONKey(str string) string {
+	// Removes localization rubish
+	if strings.Contains(str, "} other {") {
+		re := regexp.MustCompile("{count, plural, one {.+} other {(.+)}}")
+		if len(re.FindStringSubmatch(str)) == 2 {
+			otherForm := re.FindStringSubmatch(str)[1]
+			str = re.ReplaceAllString(str, otherForm)
+		}
+	}
+	
 	str = keyReplacer.Replace(str) // Removes all dashes, dots, and colons from titles
 	str = strings.ToLower(str)
 	str = strings.Title(str)                // Uppercases lowercase leading characters
