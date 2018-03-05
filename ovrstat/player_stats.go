@@ -53,6 +53,11 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	
 	// Prevents potential memory leak
 	defer res.Body.Close()
+	
+	// Checks if profile not found, site still returns 200 in this case
+	if pd.Find("h1.u-align-center").First().Text() == "Profile Not Found" {
+		return nil, PlayerNotFound
+	}
 
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
