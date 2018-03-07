@@ -18,8 +18,9 @@ const (
 )
 
 var (
-	baseURL        = "https://playoverwatch.com/en-us/career"
-	PlayerNotFound = errors.New("Player not found")
+	baseURL         = "https://playoverwatch.com/en-us/career"
+	PlayerNotFound  = errors.New("player not found")
+	IncorrectParams = errors.New("incorrect parameters")
 )
 
 // PCStats retrieves player stats for PC
@@ -30,6 +31,18 @@ func PCStats(region, tag string) (*PlayerStats, error) {
 // ConsoleStats retrieves player stats for Console
 func ConsoleStats(platform, tag string) (*PlayerStats, error) {
 	return playerStats(fmt.Sprintf("/%s/%s", platform, tag))
+}
+
+// Stats retrieves player stats
+// Universal method if you don't need to differentiate it
+func Stats(regionOrPlatform, tag string) (*PlayerStats, error) {
+	if regionOrPlatform == "eu" || regionOrPlatform == "us" || regionOrPlatform == "kr" {
+		return playerStats(fmt.Sprintf("/pc/%s/%s", regionOrPlatform, tag))
+	} else if regionOrPlatform == "psn" || regionOrPlatform == "xbl" {
+		return playerStats(fmt.Sprintf("/%s/%s", regionOrPlatform, tag))
+	} else {
+		return nil, IncorrectParams
+	}
 }
 
 // playerStats retrieves all Overwatch statistics for a given player
