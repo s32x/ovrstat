@@ -1,33 +1,42 @@
-hash: 4965901026008e04a8318158997fa1f7125925dbbda779005eafda4b7dd5c675
-updated: 2018-02-03T22:14:24.842782-07:00
+hash: 0354df19d2ef97f9577db19d96f5d2f583f85bd6056574bc087b701b99bd2099
+updated: 2018-03-18T15:52:05.780504-07:00
 imports:
 - name: github.com/andybalholm/cascadia
-  version: 349dd0209470eabd9514242c688c403c0926d266
-- name: github.com/gorilla/context
-  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
-- name: github.com/gorilla/mux
-  version: c0091a029979286890368b4c7b301261e448e242
+  version: 901648c87902174f774fac311d7f176f8647bdaa
 - name: github.com/jinzhu/inflection
-  version: 1c35d901db3da928c72a72d8458480cc9ade058f
+  version: 04140366298a54a039076d798123ffa108fff46c
+- name: github.com/labstack/echo
+  version: a5d81b8d4a627f3f49dcb3164ef2bb5239682227
+- name: github.com/labstack/gommon
+  version: 3bc2d333a4c30531c47051369043bcabd62ff4c0
+  subpackages:
+  - color
+  - log
+- name: github.com/mattn/go-colorable
+  version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
+- name: github.com/mattn/go-isatty
+  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/PuerkitoBio/goquery
-  version: 09540e565986583836b5fc792fe951ec5fd201dd
-- name: github.com/sdwolfe32/slimhttp
-  version: 64aa00fe85deb805b214f66ee617439245d7a6ab
+  version: 61aa1975b1f7856927c526b0e0cd8c8b3a3030d0
 - name: github.com/sirupsen/logrus
-  version: 768a92a02685ee7535069fc1581341b41bab9b72
+  version: 90150a8ed11b6ce285e77e8af2b0109559ce4777
+- name: github.com/valyala/bytebufferpool
+  version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
+- name: github.com/valyala/fasttemplate
+  version: dcecefd839c4193db0d35b88ec65b4c12d360ab0
 - name: golang.org/x/crypto
-  version: 1875d0a70c90e57f11972aefd42276df65e895b9
+  version: 374053ea96cb300f8671b8d3b07edeeb06e203b4
   subpackages:
   - acme
   - acme/autocert
   - ssh/terminal
 - name: golang.org/x/net
-  version: 2fb46b16b8dda405028c50f7c7f0f9dd1fa6bfb1
+  version: 24dd3780ca4f75fed9f321890729414a4b5d3f13
   subpackages:
   - html
   - html/atom
 - name: golang.org/x/sys
-  version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
+  version: 01acb38716e021ed1fc03a602bdb5838e1358c5e
   subpackages:
   - unix
   - windows

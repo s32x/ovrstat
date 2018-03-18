@@ -13,19 +13,42 @@ import (
 )
 
 const (
+	// PlatformXBL is platform : XBOX
 	PlatformXBL = "xbl"
+	// PlatformPSN is the platform : Playstation Network
 	PlatformPSN = "psn"
+	// RegionEU is the region : European Union
+	RegionEU = "eu"
+	// RegionUS is the region : United States
+	RegionUS = "us"
+	// RegionKR is region : Korea
+	RegionKR = "kr"
 )
 
 var (
-	baseURL         = "https://playoverwatch.com/en-us/career"
-	PlayerNotFound  = errors.New("player not found")
-	IncorrectParams = errors.New("incorrect parameters")
+	baseURL = "https://playoverwatch.com/en-us/career"
+	// ErrPlayerNotFound is thrown when a player doesn't exist
+	ErrPlayerNotFound = errors.New("player not found")
+	// ErrInvalidPlatformOrRegion is thrown when the passed params are incorrect
+	ErrInvalidPlatformOrRegion = errors.New("invalid platform or region")
 )
 
-// PCStats retrieves player stats for PC
-func PCStats(region, tag string) (*PlayerStats, error) {
-	return playerStats(fmt.Sprintf("/pc/%s/%s", region, tag))
+// Stats retrieves player stats
+// Universal method if you don't need to differentiate it
+func Stats(area, tag string) (*PlayerStats, error) {
+	// Perform a stats lookup for PC users
+	if area == RegionEU ||
+		area == RegionUS ||
+		area == RegionKR {
+		return PCStats(area, tag)
+	}
+
+	// Perform a stats lookup for Console users
+	if area == PlatformPSN ||
+		area == PlatformXBL {
+		return ConsoleStats(area, tag)
+	}
+	return nil, ErrInvalidPlatformOrRegion
 }
 
 // ConsoleStats retrieves player stats for Console
@@ -33,16 +56,9 @@ func ConsoleStats(platform, tag string) (*PlayerStats, error) {
 	return playerStats(fmt.Sprintf("/%s/%s", platform, tag))
 }
 
-// Stats retrieves player stats
-// Universal method if you don't need to differentiate it
-func Stats(regionOrPlatform, tag string) (*PlayerStats, error) {
-	if regionOrPlatform == "eu" || regionOrPlatform == "us" || regionOrPlatform == "kr" {
-		return playerStats(fmt.Sprintf("/pc/%s/%s", regionOrPlatform, tag))
-	} else if regionOrPlatform == "psn" || regionOrPlatform == "xbl" {
-		return playerStats(fmt.Sprintf("/%s/%s", regionOrPlatform, tag))
-	} else {
-		return nil, IncorrectParams
-	}
+// PCStats retrieves player stats for PC
+func PCStats(region, tag string) (*PlayerStats, error) {
+	return playerStats(fmt.Sprintf("/pc/%s/%s", region, tag))
 }
 
 // playerStats retrieves all Overwatch statistics for a given player
@@ -55,7 +71,7 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 
 	// If the response is a 200 return an error
 	if res.StatusCode != 200 {
-		return nil, PlayerNotFound
+		return nil, ErrPlayerNotFound
 	}
 
 	// Parses the stats request into a goquery document
@@ -63,13 +79,13 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Prevents potential memory leak
 	defer res.Body.Close()
-	
+
 	// Checks if profile not found, site still returns 200 in this case
 	if pd.Find("h1.u-align-center").First().Text() == "Profile Not Found" {
-		return nil, PlayerNotFound
+		return nil, ErrPlayerNotFound
 	}
 
 	// Scrapes all stats for the passed user and sets struct member data
@@ -134,7 +150,7 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 				if len(time) == 2 {
 					digit, err := strconv.ParseInt(time[0], 10, 32)
 					if err != nil {
-						bhsMap[heroName].TimePlayedInSeconds = 0;
+						bhsMap[heroName].TimePlayedInSeconds = 0
 					}
 
 					if strings.HasPrefix(time[1], "second") {
@@ -297,7 +313,7 @@ func cleanJSONKey(str string) string {
 			str = re.ReplaceAllString(str, otherForm)
 		}
 	}
-	
+
 	str = keyReplacer.Replace(str) // Removes all dashes, dots, and colons from titles
 	str = strings.ToLower(str)
 	str = strings.Title(str)                // Uppercases lowercase leading characters

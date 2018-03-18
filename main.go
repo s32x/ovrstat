@@ -1,12 +1,10 @@
 package main
 
 import (
-	"net/http"
 	"os"
-	"strconv"
 
+	"github.com/labstack/echo"
 	"github.com/sdwolfe32/ovrstat/api"
-	"github.com/sdwolfe32/slimhttp"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,17 +16,15 @@ func main() {
 
 	// Create a server Builder and bind the endpoints
 	logger.Info("Binding HTTP endpoints to router")
-	r := slimhttp.NewRouter()
-	o := api.NewOvrstatService(logger)
-	h := slimhttp.NewHealthcheckService(logger, "ovrstat.com")
-	r.HandleJSONEndpoint("/stats/pc/{region}/{tag}", o.PCStats).Methods(http.MethodGet)
-	r.HandleJSONEndpoint("/stats/{platform}/{tag}", o.ConsoleStats).Methods(http.MethodGet)
-	r.HandleJSONEndpoint("/healthcheck", h.Healthcheck).Methods(http.MethodGet)
+	e := echo.New()
+	o := api.New(logger)
+	e.GET("/stats/pc/:area/:tag", o.Stats)
+	e.GET("/stats/:area/:tag", o.Stats)
 
 	// Listen on the specified port
-	port, _ := strconv.Atoi(getEnv("PORT", "8000"))
-	logger.Infof("Listening and Serving on port %v", port)
-	logger.Fatal(r.ListenAndServe(port))
+	port := getEnv("PORT", "8080")
+	logger.WithField("port", port).Info("Listening for requests...")
+	e.Logger.Fatal(e.Start(":" + port))
 }
 
 // getEnv retrieves variables from the environment and falls back

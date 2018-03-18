@@ -1,7 +1,6 @@
 package: github.com/sdwolfe32/ovrstat
 import:
 - package: github.com/PuerkitoBio/goquery
-- package: github.com/gorilla/mux
 - package: github.com/jinzhu/inflection
-- package: github.com/sdwolfe32/slimhttp
+- package: github.com/labstack/echo
 - package: github.com/sirupsen/logrus
