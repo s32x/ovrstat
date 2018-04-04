@@ -3,10 +3,14 @@ package main
 import (
 	"os"
 
+	_ "github.com/heroku/x/hmetrics/onload"
 	"github.com/labstack/echo"
 	"github.com/sdwolfe32/ovrstat/api"
 	"github.com/sirupsen/logrus"
 )
+
+// Port is the port the server will run on
+var Port = getEnv("PORT", "8080")
 
 func main() {
 	logger := logrus.New()
@@ -22,9 +26,8 @@ func main() {
 	e.GET("/stats/:area/:tag", o.Stats)
 
 	// Listen on the specified port
-	port := getEnv("PORT", "8080")
-	logger.WithField("port", port).Info("Listening for requests...")
-	e.Logger.Fatal(e.Start(":" + port))
+	logger.WithField("port", Port).Info("Listening for requests...")
+	e.Logger.Fatal(e.Start(":" + Port))
 }
 
 // getEnv retrieves variables from the environment and falls back

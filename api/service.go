@@ -3,15 +3,16 @@ package api
 import (
 	"net/http"
 
+	raven "github.com/getsentry/raven-go"
 	"github.com/labstack/echo"
 	"github.com/sdwolfe32/ovrstat/ovrstat"
+	tinystat "github.com/sdwolfe32/tinystat/client"
 	"github.com/sirupsen/logrus"
 )
 
 var (
 	// ErrPlayerNotFound is thrown when a request is made for a player that doesn't exist
 	ErrPlayerNotFound = echo.NewHTTPError(http.StatusNotFound, "Player not found")
-
 	// ErrFailedLookup is thrown when there is an error retrieving an accounts stats
 	ErrFailedLookup = echo.NewHTTPError(http.StatusInternalServerError, "Failed to perform lookup")
 )
@@ -34,6 +35,8 @@ func (o *OvrstatService) Stats(c echo.Context) error {
 	l.Debug("Performing Stats lookup")
 	stats, err := ovrstat.Stats(c.Param("area"), c.Param("tag"))
 	if err != nil {
+		tinystat.CreateAction("error")
+		raven.CaptureError(err, nil)
 		if err == ovrstat.ErrPlayerNotFound {
 			l.WithError(err).Error("Player not found")
 			return ErrPlayerNotFound
@@ -44,5 +47,6 @@ func (o *OvrstatService) Stats(c echo.Context) error {
 
 	// Returns the successful stats lookup
 	l.Info("Returning successful stats lookup")
+	tinystat.CreateAction("success")
 	return c.JSON(http.StatusOK, stats)
 }
