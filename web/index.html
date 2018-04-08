@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ovrstat | Unofficial Overwatch Stats API</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70800349-8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-70800349-8');
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="/assets/css/ovrstat.css">
+</head>
+
+<body>
+    <div class="ui container padded">
+        <div class="ui equal width stackable grid">
+            <div class="column">
+                <a href="/">
+                    <img class="ui header-logo" src="/assets/images/ovrstatdarksmall.png">
+                </a>
+            </div>
+            <div class="right aligned column">
+                <a class="github-button" href="https://github.com/sdwolfe32/ovrstat" data-size="large" data-show-count="true" aria-label="Star sdwolfe32/ovrstat on GitHub">Star</a>
+            </div>
+        </div>
+    </div>
+    <div class="ui container padded-bottom">
+        <div class="masthead"></div>
+    </div>
+    <div class="ui container padded">
+        <div class="ui centered grid">
+            <div class="ui yellow segment">
+                <form id="stats-form">
+                    <div class="ui action input">
+                        <div class="ui action input">
+                            <input id="tag" placeholder="Viz-1213" type="text">
+                        </div>
+                        <div class="ui compact selection dropdown" tabindex="0">
+                            <select id="area">
+                                <option value="us">US (PC)</option>
+                                <option value="eu">EU (PC)</option>
+                                <option value="kr">KR (PC)</option>
+                                <option value="xbl">XBOX</option>
+                                <option value="psn">PS4</option>
+                            </select>
+                            <i class="dropdown icon"></i>
+                            <div class="text">PC</div>
+                            <div class="menu" tabindex="-1">
+                                <div class="item active selected" data-value="us">US (PC)</div>
+                                <div class="item" data-value="eu">EU (PC)</div>
+                                <div class="item" data-value="kr">KR (PC)</div>
+                                <div class="item" data-value="xbl">XBOX</div>
+                                <div class="item" data-value="psn">PS4</div>
+                            </div>
+                        </div>
+                        <button id="stats-button" class="ui basic button">Try it out!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="ui container padded-bottom">
+        <h2><i class="chart bar outline icon"></i> Lookup Statistics</h2>
+        <div class="ui two small stackable statistics">
+            <div class="ui statistic">
+                <div id="dayLookups" class="value"></div>
+                <div class="label">Today</div>
+            </div>
+            <div class="ui statistic">
+                <div id="monthLookups" class="value"></div>
+                <div class="label">This Month</div>
+            </div>
+        </div>
+    </div>
+    <div class="ui container padded-bottom">
+        <h1>
+            <i class="book icon"></i> API Usage</h1>
+        <p>
+            Overstat is an Unofficial Overwatch Stats API written in Go. Accessing it's main API endpoint is extremely simple. Perform
+            a
+            <code>GET</code> request on the main lookup endpoint using one of the two following schemas.
+        </p>
+        <h3>For PC Stats</h3>
+        <div class="ui yellow segment">
+            <code>ovrstat.com/stats/pc/{region}/{username}</code>
+        </div>
+        <h3>For Console Stats</h3>
+        <div class="ui yellow segment">
+            <code>ovrstat.com/stats/{platform}/{username}</code>
+        </div>
+    </div>
+    <div class="ui container padded-bottom">
+        <div class="ui grid middle aligned stackable">
+            <div class="nine wide column">
+                <h2>I <i class="red heart icon"></i> Overwatch</h2>
+            </div>
+            <div class="seven wide right aligned column">
+                <a class="tiny ui yellow button" href="https://swolfe.me">
+                    <i class="terminal icon"></i> My Website
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="ui container padded-bottom">
+        This web site and all documentation is licensed under
+        <a href="https://creativecommons.org/licenses/by/3.0/">Creative Commons 3.0</a>.
+        <br/>
+        <i class="copyright icon"></i>Copyright 2018,
+        <a href="https://swolfe.me/">Steven Wolfe</a>. All Rights Reserved
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/1.9.3/countUp.min.js"></script>
+    <script src="https://buttons.github.io/buttons.js"></script>
+    <script src="/assets/js/ovrstat.js"></script>
+</body>
+
+</html>

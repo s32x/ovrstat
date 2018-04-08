@@ -26,10 +26,10 @@ func New(log *logrus.Logger) *OvrstatService {
 	return &OvrstatService{log: log.WithField("service", "ovrstat")}
 }
 
-// Stats handles serving Overwatch stats data for PC
-func (o *OvrstatService) Stats(c echo.Context) error {
-	l := o.log.WithField("handler", "pc").WithField("ip_address", c.RealIP())
-	l.Debug("New PC Stats request received")
+// Overwatch handles serving Overwatch stats
+func (o *OvrstatService) Overwatch(c echo.Context) error {
+	l := o.log.WithField("handler", "overwatch")
+	l.Debug("New Overwatch Stats request received")
 
 	// Performs a full stats lookup
 	l.Debug("Performing Stats lookup")
@@ -45,8 +45,8 @@ func (o *OvrstatService) Stats(c echo.Context) error {
 		return ErrFailedLookup
 	}
 
-	// Returns the successful stats lookup
-	l.Info("Returning successful stats lookup")
+	// Returns the successful overwatch stats lookup
+	l.Debug("Returning successful Overwatch Stats lookup")
 	tinystat.CreateAction("success")
 	return c.JSON(http.StatusOK, stats)
 }

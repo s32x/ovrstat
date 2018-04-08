@@ -1,0 +1,60 @@
+html,
+body {
+    background-color: rgb(235, 235, 235);
+    color: rgb(39, 39, 39);
+    line-height: 1.6;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    height: 100%;
+}
+
+h1 {
+    color: rgb(39, 39, 39);
+    padding-bottom: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+}
+
+h2 {
+    color: rgb(39, 39, 39);
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    font-size: 25px;
+}
+
+p {
+    line-height: 1.7;
+    font-family: 'Open Sans', sans-serif;
+}
+
+a {
+    color: #fbbd08;
+}
+
+a:hover {
+    color: #ffdd75;
+}
+
+.ui.container {
+    width: 450px;
+}
+
+.header-logo {
+    height: 35px;
+}
+
+.masthead {
+    background: url("https://i.pinimg.com/originals/05/57/fb/0557fbe4db1c69f754e7fa97ec940422.gif") no-repeat center;
+    color: rgb(39, 39, 39);
+    padding: 150px 0;
+}
+
+.padded {
+    padding: 40px 0;
+}
+
+.padded-bottom {
+    padding-bottom: 40px;
+}

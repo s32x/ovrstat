@@ -11,3 +11,6 @@ import:
   subpackages:
   - client
 - package: github.com/sirupsen/logrus
+- package: golang.org/x/sync
+  subpackages:
+  - errgroup

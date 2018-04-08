@@ -22,8 +22,11 @@ func main() {
 	logger.Info("Binding HTTP endpoints to router")
 	e := echo.New()
 	o := api.New(logger)
-	e.GET("/stats/pc/:area/:tag", o.Stats)
-	e.GET("/stats/:area/:tag", o.Stats)
+	e.GET("/stats/pc/:area/:tag", o.Overwatch)
+	e.GET("/stats/:area/:tag", o.Overwatch)
+	e.GET("/stats", o.Ovrstat)
+	e.Static("/", "web")
+	e.Static("/assets", "web/assets")
 
 	// Listen on the specified port
 	logger.WithField("port", Port).Info("Listening for requests...")
