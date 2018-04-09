@@ -1,24 +1,26 @@
 $('.ui.dropdown').dropdown();
 
+var timeout = 10000;
 var oldStats = {};
 
 function pollStats() {
     $.getJSON('/stats', function (newStats) {
         // Set all countups
-        countup('dayLookups', oldStats.dayLookups, newStats.dayLookups);
-        countup('monthLookups', oldStats.monthLookups, newStats.monthLookups);
+        countup('dayLookups', 24, oldStats.dayLookups, newStats.dayLookups);
+        countup('monthLookups', 720, oldStats.monthLookups, newStats.monthLookups);
         oldStats = newStats;
 
         // Perform this action every 10 seconds
-        setTimeout(pollStats, 10000); // Poll stats every 10 seconds and re-apply to UI
+        setTimeout(pollStats, timeout); // Poll stats every 10 seconds and re-apply to UI
     });
 }
 
 // countup animates the passed id with a new counted up value
-function countup(id, from, to, prefix, suffix) {
-    // if from isn't set yet, set it to the initial to value
+function countup(id, hours, from, to, prefix, suffix) {
+    // if from isn't set yet, calculate a rough initial value 
     if (from == undefined) {
-        from = to
+        var rps = ((to/hours)/60)/60; // Average requests per second
+        from = to-(rps*(timeout/1000)); // Subtract 10 seconds worth
     }
 
     // Configure countup options
