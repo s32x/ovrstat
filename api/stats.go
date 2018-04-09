@@ -17,7 +17,7 @@ type Stats struct {
 }
 
 // Ovrstat handles serving Ovrstat stats
-func (o *OvrstatService) Ovrstat(c echo.Context) error {
+func (o *Service) Ovrstat(c echo.Context) error {
 	l := o.log.WithField("handler", "stats")
 	l.Debug("New Ovrstat Stats request received")
 

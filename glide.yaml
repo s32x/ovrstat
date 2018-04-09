@@ -7,6 +7,7 @@ import:
   - hmetrics/onload
 - package: github.com/jinzhu/inflection
 - package: github.com/labstack/echo
+- package: github.com/patrickmn/go-cache
 - package: github.com/sdwolfe32/tinystat
   subpackages:
   - client

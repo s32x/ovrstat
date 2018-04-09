@@ -1,5 +1,5 @@
-hash: 04b572768213c2383f27dda097f488463441a24be93445e75029a956b86e0531
-updated: 2018-04-07T21:22:47.171792-07:00
+hash: e0c7dcdeb062ee565f3c94650f5795916361e0b872252b83ed0530059019efef
+updated: 2018-04-08T19:47:44.333246-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 901648c87902174f774fac311d7f176f8647bdaa
@@ -25,12 +25,14 @@ imports:
   version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
 - name: github.com/mattn/go-isatty
   version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
+- name: github.com/patrickmn/go-cache
+  version: a3647f8e31d79543b2d0f0ae2fe5c379d72cedc0
 - name: github.com/pkg/errors
   version: 816c9085562cd7ee03e7f8188a1cfd942858cded
 - name: github.com/PuerkitoBio/goquery
   version: ea1bc64a63088ac2bbf1a2edcae38413794a7710
 - name: github.com/sdwolfe32/tinystat
-  version: 6cb6f3c93069eb90e450ac2577f4039747baec43
+  version: 376246d4faa5a51dd868d710bc8b920d30f6edf8
   subpackages:
   - client
   - models
