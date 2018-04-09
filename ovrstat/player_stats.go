@@ -7,10 +7,13 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 )
+
+var client = http.Client{Timeout: time.Second * 20}
 
 const (
 	// PlatformXBL is platform : XBOX
@@ -64,13 +67,14 @@ func PCStats(region, tag string) (*PlayerStats, error) {
 // playerStats retrieves all Overwatch statistics for a given player
 func playerStats(profilePath string) (*PlayerStats, error) {
 	// Performs the stats request
-	res, err := http.Get(baseURL + profilePath)
+	res, err := client.Get(baseURL + profilePath)
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
-	// If the response is a 200 return an error
-	if res.StatusCode != 200 {
+	// If the response is not a 200 return an error
+	if res.StatusCode != http.StatusOK {
 		return nil, ErrPlayerNotFound
 	}
 
@@ -79,9 +83,6 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// Prevents potential memory leak
-	defer res.Body.Close()
 
 	// Checks if profile not found, site still returns 200 in this case
 	if pd.Find("h1.u-align-center").First().Text() == "Profile Not Found" {
