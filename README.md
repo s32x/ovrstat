@@ -2,11 +2,11 @@
 
 [![GoDoc](https://godoc.org/github.com/sdwolfe32/ovrstat/goow?status.svg)](https://godoc.org/github.com/sdwolfe32/ovrstat/goow)
 
-![alt text](/img/ovrstatdarksmall.png "ovrstat")
+![](web/assets/images/ovrstatdarksmall.png "ovrstat")
 
 ovrstat is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary.
 
-Note: As this is a web-scraping API I saw no reason to serve separate data across multiple requests. While caching could be an option to save bandwidth on your end, I didn't see any reason not to give you back as much information as we retrieve from Blizzard, thus there is only one endpoint currently.
+Note: This is a single endpoint web-scraping API that takes the full payload of information that we retrieve from Blizzard and passes it through to you in a single response. Things like caching and splitting data across multiple responses could likely improve performance, but in pursuit of keeping things simple, ovrstat does not implement them.
 
 ### Running with Docker
 ```
@@ -18,7 +18,9 @@ go get github.com/sdwolfe32/ovrstat/ovrstat
 ```
 ### Usage
 
-You have two options for using the API, Either import the child dependency used in this API, use the API we host on Heroku, or host your own Ovrstat API using the public docker image `sdwolfe32/ovrstat`.
+You have two options for using the API: 
+* Import the child dependency used in this API and use the API we host on Heroku
+* Host your own Ovrstat API using the public docker image `sdwolfe32/ovrstat`.
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
