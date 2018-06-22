@@ -79,7 +79,7 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	}
 
 	// Parses the stats request into a goquery document
-	pd, err := goquery.NewDocumentFromResponse(res)
+	pd, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -122,8 +122,8 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 // parseDetailedStats populates the passed stats collection with detailed statistics
 func parseDetailedStats(playModeSelector *goquery.Selection) statsCollection {
 	var sc statsCollection
-	sc.TopHeroes = parseHeroStats(playModeSelector.Find("section.hero-comparison-section").First())
-	sc.CareerStats = parseCareerStats(playModeSelector.Find("section.career-stats-section").First())
+	sc.TopHeroes = parseHeroStats(playModeSelector.Find("div.progress-category").Parent())
+	sc.CareerStats = parseCareerStats(playModeSelector.Find("div.js-stats").Parent())
 	return sc
 }
 
