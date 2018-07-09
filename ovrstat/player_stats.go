@@ -66,8 +66,11 @@ func PCStats(region, tag string) (*PlayerStats, error) {
 
 // playerStats retrieves all Overwatch statistics for a given player
 func playerStats(profilePath string) (*PlayerStats, error) {
+	// Create the profile url for scraping
+	url := baseURL + profilePath
+
 	// Performs the stats request
-	res, err := client.Get(baseURL + profilePath)
+	res, err := client.Get(url)
 	if err != nil {
 		return nil, err
 	}
