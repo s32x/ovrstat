@@ -10,7 +10,7 @@ Note: This is a single endpoint web-scraping API that takes the full payload of 
 
 ### Running with Docker
 ```
-docker run -p 8000:8000 sdwolfe32/ovrstat
+docker run -p 8080:8080 sdwolfe32/ovrstat
 ```
 ### Installing
 ```
