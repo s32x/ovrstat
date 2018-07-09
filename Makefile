@@ -12,3 +12,6 @@ glide:
 test:
 	go clean
 	go test ${NOVENDOR_PATH}
+
+run:
+	go run main.go
