@@ -1,17 +1,14 @@
-hash: dcf870be8e810360e3a2ac0c20263e5d8f705417ad88cb4675b7b34252c38d69
-updated: 2018-07-09T01:18:53.070266-07:00
+hash: aa3f6b667a892efe31fbcfcae986ad3f7acd049b2cb0422e3475eef40fcfe155
+updated: 2018-07-09T18:35:15.808286-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 901648c87902174f774fac311d7f176f8647bdaa
-- name: github.com/heroku/x
-  version: 945ba8016e7249017bce3e735f331cef328645a9
-  subpackages:
-  - hmetrics
-  - hmetrics/onload
+- name: github.com/entrik/httpclient
+  version: 08b316040fd11ab63c48c122a4a3f42f6ef7b530
 - name: github.com/jinzhu/inflection
   version: 04140366298a54a039076d798123ffa108fff46c
 - name: github.com/labstack/echo
-  version: 60072188355b8972c738a041666bd4b05957c135
+  version: d8a6dad02daaa987a7aa6a97c4896e345d2e9b4b
 - name: github.com/labstack/gommon
   version: 2a618302b929cc20862dda3aa6f02f64dbe740dd
   subpackages:
@@ -36,7 +33,7 @@ imports:
   - acme/autocert
   - ssh/terminal
 - name: golang.org/x/net
-  version: 6f138e0f60713a248abf7046f1014a3ba90f5341
+  version: 6a8eb5e2b1816b30aa88d7e3ecf9eb7c4559d9e6
   subpackages:
   - html
   - html/atom

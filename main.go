@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 
-	_ "github.com/heroku/x/hmetrics/onload"
 	"github.com/labstack/echo"
 	"github.com/sdwolfe32/ovrstat/api"
 	"github.com/sirupsen/logrus"

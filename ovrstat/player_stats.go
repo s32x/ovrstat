@@ -1,9 +1,9 @@
 package ovrstat
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,11 +11,11 @@ import (
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/entrik/httpclient"
 )
 
-var client = http.Client{Timeout: time.Second * 20}
-
 const (
+	baseURL = "https://playoverwatch.com/en-us/career"
 	// PlatformXBL is platform : XBOX
 	PlatformXBL = "xbl"
 	// PlatformPSN is the platform : Playstation Network
@@ -29,12 +29,16 @@ const (
 )
 
 var (
-	baseURL = "https://playoverwatch.com/en-us/career"
 	// ErrPlayerNotFound is thrown when a player doesn't exist
-	ErrPlayerNotFound = errors.New("player not found")
+	ErrPlayerNotFound = errors.New("Player not found")
 	// ErrInvalidPlatformOrRegion is thrown when the passed params are incorrect
-	ErrInvalidPlatformOrRegion = errors.New("invalid platform or region")
+	ErrInvalidPlatformOrRegion = errors.New("Invalid platform or region")
 )
+
+// The http client that will be used for all content
+// retrieval
+var client = httpclient.NewBaseClient().
+	SetTimeout(20 * time.Second)
 
 // Stats retrieves player stats
 // Universal method if you don't need to differentiate it
@@ -70,19 +74,13 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	url := baseURL + profilePath
 
 	// Performs the stats request
-	res, err := client.Get(url)
+	res, err := client.GetBytes(url, nil)
 	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	// If the response is not a 200 return an error
-	if res.StatusCode != http.StatusOK {
 		return nil, ErrPlayerNotFound
 	}
 
 	// Parses the stats request into a goquery document
-	pd, err := goquery.NewDocumentFromReader(res.Body)
+	pd, err := goquery.NewDocumentFromReader(bytes.NewReader(res))
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +154,6 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 					if err != nil {
 						bhsMap[heroName].TimePlayedInSeconds = 0
 					}
-
 					if strings.HasPrefix(time[1], "second") {
 						bhsMap[heroName].TimePlayedInSeconds = int(digit)
 					}
@@ -167,7 +164,6 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 						bhsMap[heroName].TimePlayedInSeconds = int(digit * 60 * 60)
 					}
 				}
-
 				bhsMap[heroName].TimePlayed = statVal
 			case "039":
 				bhsMap[heroName].GamesWon, _ = strconv.Atoi(statVal)
@@ -190,8 +186,8 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 // parseCareerStats
 func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*careerStats {
 	csMap := make(map[string]*careerStats)
-
 	heroMap := make(map[string]string)
+
 	// Populates tempHeroMap to match hero ID to name in second scrape
 	careerStatsSelector.Find("select option").Each(func(i int, heroSel *goquery.Selection) {
 		heroVal, _ := heroSel.Attr("value")
