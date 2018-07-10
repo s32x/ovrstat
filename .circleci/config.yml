@@ -5,7 +5,7 @@ jobs:
     environment:
       - DOCKER_TAG: sdwolfe32/ovrstat
     docker:
-      - image: circleci/golang:1.9.1
+      - image: circleci/golang:latest
     steps:
       - checkout
       - run:
