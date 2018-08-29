@@ -92,8 +92,15 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
+
+	if pd.Find("p.masthead-permission-level-text").First().Text() == "Private Profile" {
+		ps.Private = true
+		return &ps, nil
+	}
+
 	ps.QuickPlayStats = parseDetailedStats(pd.Find("div#quickplay").First())
 	ps.CompetitiveStats = parseDetailedStats(pd.Find("div#competitive").First())
+
 	return &ps, nil
 }
 
@@ -113,6 +120,10 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.PrestigeIcon, _ = s.Find("div.player-rank").Attr("style")
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, "background-image:url(", "", -1)
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, ")", "", -1)
+	ps.Endorsement, _ = strconv.Atoi(s.Find("div.endorsement-level div.u-center").First().Text())
+	ps.EndorsementIcon, _ = s.Find("div.EndorsementIcon").Attr("style")
+	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, "background-image:url(", "", -1)
+	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, ")", "", -1)
 	ps.Rating, _ = strconv.Atoi(s.Find("div.competitive-rank div.u-align-center").First().Text())
 	ps.RatingIcon, _ = s.Find("div.competitive-rank img").Attr("src")
 	ps.GamesWon, _ = strconv.Atoi(strings.Replace(s.Find("div.masthead p.masthead-detail.h4 span").Text(), " games won", "", -1))

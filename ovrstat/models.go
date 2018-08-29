@@ -6,6 +6,8 @@ type PlayerStats struct {
 	Name             string          `json:"name"`
 	Level            int             `json:"level"`
 	LevelIcon        string          `json:"levelIcon"`
+	Endorsement      int             `json:"endorsement"`
+	EndorsementIcon  string          `json:"endorsementIcon"`
 	Prestige         int             `json:"prestige"`
 	PrestigeIcon     string          `json:"prestigeIcon"`
 	Rating           int             `json:"rating"`
@@ -13,6 +15,7 @@ type PlayerStats struct {
 	GamesWon         int             `json:"gamesWon"`
 	QuickPlayStats   statsCollection `json:"quickPlayStats"`
 	CompetitiveStats statsCollection `json:"competitiveStats"`
+	Private          bool            `json:"private"`
 }
 
 // statsCollection holds a collection of stats for a particular player
