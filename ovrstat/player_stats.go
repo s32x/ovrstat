@@ -7,23 +7,27 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/entrik/httpclient"
+	"github.com/starboy/httpclient"
 )
 
 const (
 	baseURL = "https://playoverwatch.com/en-us/career"
+
 	// PlatformXBL is platform : XBOX
 	PlatformXBL = "xbl"
+
 	// PlatformPSN is the platform : Playstation Network
 	PlatformPSN = "psn"
+
 	// RegionEU is the region : European Union
 	RegionEU = "eu"
+
 	// RegionUS is the region : United States
 	RegionUS = "us"
+
 	// RegionKR is region : Korea
 	RegionKR = "kr"
 )
@@ -31,31 +35,22 @@ const (
 var (
 	// ErrPlayerNotFound is thrown when a player doesn't exist
 	ErrPlayerNotFound = errors.New("Player not found")
+
 	// ErrInvalidPlatformOrRegion is thrown when the passed params are incorrect
 	ErrInvalidPlatformOrRegion = errors.New("Invalid platform or region")
 )
 
-// The http client that will be used for all content
-// retrieval
-var client = httpclient.NewBaseClient().
-	SetTimeout(20 * time.Second)
-
 // Stats retrieves player stats
 // Universal method if you don't need to differentiate it
 func Stats(area, tag string) (*PlayerStats, error) {
-	// Perform a stats lookup for PC users
-	if area == RegionEU ||
-		area == RegionUS ||
-		area == RegionKR {
-		return PCStats(area, tag)
+	switch area {
+	case RegionEU, RegionUS, RegionKR:
+		return PCStats(area, tag) // Perform a stats lookup for PC
+	case PlatformPSN, PlatformXBL:
+		return ConsoleStats(area, tag) // Perform a stats lookup for Console
+	default:
+		return nil, ErrInvalidPlatformOrRegion
 	}
-
-	// Perform a stats lookup for Console users
-	if area == PlatformPSN ||
-		area == PlatformXBL {
-		return ConsoleStats(area, tag)
-	}
-	return nil, ErrInvalidPlatformOrRegion
 }
 
 // ConsoleStats retrieves player stats for Console
@@ -74,7 +69,7 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	url := baseURL + profilePath
 
 	// Performs the stats request
-	res, err := client.GetBytes(url, nil)
+	res, err := httpclient.GetBytes(url)
 	if err != nil {
 		return nil, ErrPlayerNotFound
 	}

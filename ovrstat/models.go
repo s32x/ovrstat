@@ -38,13 +38,13 @@ type topHeroStats struct {
 
 // careerStats holds very detailed stats for each hero
 type careerStats struct {
-	Assists       map[string]interface{} `json:"assists,omitempty"`
-	Average       map[string]interface{} `json:"average,omitempty"`
-	Best          map[string]interface{} `json:"best,omitempty"`
-	Combat        map[string]interface{} `json:"combat,omitempty"`
-	Deaths        map[string]interface{} `json:"deaths,omitempty"`
-	HeroSpecific  map[string]interface{} `json:"heroSpecific,omitempty"`
-	Game          map[string]interface{} `json:"game,omitempty"`
-	MatchAwards   map[string]interface{} `json:"matchAwards,omitempty"`
-	Miscellaneous map[string]interface{} `json:"miscellaneous,omitempty"`
+	Assists       map[string]interface{} `json:"assists"`
+	Average       map[string]interface{} `json:"average"`
+	Best          map[string]interface{} `json:"best"`
+	Combat        map[string]interface{} `json:"combat"`
+	Deaths        map[string]interface{} `json:"deaths"`
+	HeroSpecific  map[string]interface{} `json:"heroSpecific"`
+	Game          map[string]interface{} `json:"game"`
+	MatchAwards   map[string]interface{} `json:"matchAwards"`
+	Miscellaneous map[string]interface{} `json:"miscellaneous"`
 }

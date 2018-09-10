@@ -17,4 +17,4 @@ heroku container:push web
 heroku container:release web
 
 # Delete the old binary
-rm -rf bin
+rm -rf ovrstat

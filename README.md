@@ -1,8 +1,8 @@
 # ovrstat
 
-[![GoDoc](https://godoc.org/github.com/sdwolfe32/ovrstat/goow?status.svg)](https://godoc.org/github.com/sdwolfe32/ovrstat/goow)
+[![GoDoc](https://godoc.org/github.com/starboy/ovrstat/goow?status.svg)](https://godoc.org/github.com/starboy/ovrstat/goow)
 
-![](web/assets/images/ovrstatdarksmall.png "ovrstat")
+![](web/assets/ovrstatdarksmall.png "ovrstat")
 
 ovrstat is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary.
 
@@ -10,17 +10,17 @@ Note: This is a single endpoint web-scraping API that takes the full payload of 
 
 ### Running with Docker
 ```
-docker run -p 8080:8080 sdwolfe32/ovrstat
+docker run -p 8080:8080 starboy/ovrstat
 ```
 ### Installing
 ```
-go get github.com/sdwolfe32/ovrstat/ovrstat
+go get github.com/starboy/ovrstat/ovrstat
 ```
 ### Usage
 
 You have two options for using the API: 
 * Import the child dependency used in this API and use the API we host on Heroku
-* Host your own Ovrstat API using the public docker image `sdwolfe32/ovrstat`.
+* Host your own Ovrstat API using the public docker image `starboy/ovrstat`.
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
@@ -45,7 +45,7 @@ package main
 import (
 	"log"
 
-	"github.com/sdwolfe32/ovrstat/ovrstat"
+	"github.com/starboy/ovrstat/ovrstat"
 )
 
 func main() {
