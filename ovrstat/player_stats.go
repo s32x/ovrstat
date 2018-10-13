@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -15,6 +16,8 @@ import (
 
 const (
 	baseURL = "https://playoverwatch.com/en-us/career"
+
+	apiURL = "https://playoverwatch.com/en-us/career/platforms/"
 
 	// PlatformXBL is platform : XBOX
 	PlatformXBL = "xbl"
@@ -88,9 +91,31 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
 
-	if pd.Find("p.masthead-permission-level-text").First().Text() == "Private Profile" {
-		ps.Private = true
-		return &ps, nil
+	// Get user id from script at page
+	re := regexp.MustCompile(`window\.app\.career\.init\((\d+)\,`)
+	userID := re.FindStringSubmatch(string(res))[1]
+
+	// Make new url to get answer from api
+	url = apiURL + userID
+
+	// Perform api request
+	type User struct {
+		Platform string `json:"platform"`
+		ID int `json:"id"`
+		Name string `json:"name"`
+		URLName string `json:"urlName"`
+		PlayerLevel int `json:"playerLevel"`
+		Portrait string `json:"portrait"`
+		IsPublic bool `json:"isPublic"`
+	}
+	var apiRes []User
+	if err := httpclient.GetJSON(url, &apiRes); err != nil {
+		return nil, ErrPlayerNotFound
+	}
+
+	if len(apiRes) == 1 {
+		ps.Private = !apiRes[0].IsPublic
+		ps.Prestige = int(math.Floor(float64(apiRes[0].PlayerLevel) / 100))
 	}
 
 	ps.QuickPlayStats = parseDetailedStats(pd.Find("div#quickplay").First())
@@ -111,8 +136,7 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.LevelIcon, _ = s.Find("div.player-level").Attr("style")
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, "background-image:url(", "", -1)
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, ")", "", -1)
-	ps.Prestige = getPrestigeByIcon(ps.LevelIcon)
-	ps.PrestigeIcon, _ = s.Find("div.player-rank").Attr("style")
+	ps.PrestigeIcon, _ = s.Find("div.player-level").Attr("style")
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, "background-image:url(", "", -1)
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, ")", "", -1)
 	ps.Endorsement, _ = strconv.Atoi(s.Find("div.endorsement-level div.u-center").First().Text())
@@ -294,15 +318,6 @@ func parseType(val string) interface{} {
 		return f
 	}
 	return val
-}
-
-func getPrestigeByIcon(levelIcon string) int {
-	r, _ := regexp.Compile(`0x0250000000000(.+?)_Border`)
-	iconID := r.FindSubmatch([]byte(levelIcon))
-	if len(iconID) != 2 {
-		return 0
-	}
-	return rankMap[string(iconID[1])]
 }
 
 var (
