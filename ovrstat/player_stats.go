@@ -58,16 +58,16 @@ func Stats(area, tag string) (*PlayerStats, error) {
 
 // ConsoleStats retrieves player stats for Console
 func ConsoleStats(platform, tag string) (*PlayerStats, error) {
-	return playerStats(fmt.Sprintf("/%s/%s", platform, tag))
+	return playerStats(fmt.Sprintf("/%s/%s", platform, tag), platform)
 }
 
 // PCStats retrieves player stats for PC
 func PCStats(region, tag string) (*PlayerStats, error) {
-	return playerStats(fmt.Sprintf("/pc/%s/%s", region, tag))
+	return playerStats(fmt.Sprintf("/pc/%s/%s", region, tag), "pc")
 }
 
 // playerStats retrieves all Overwatch statistics for a given player
-func playerStats(profilePath string) (*PlayerStats, error) {
+func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	// Create the profile url for scraping
 	url := baseURL + profilePath
 
@@ -99,23 +99,31 @@ func playerStats(profilePath string) (*PlayerStats, error) {
 	url = apiURL + userID
 
 	// Perform api request
-	type User struct {
-		Platform string `json:"platform"`
-		ID int `json:"id"`
-		Name string `json:"name"`
-		URLName string `json:"urlName"`
-		PlayerLevel int `json:"playerLevel"`
-		Portrait string `json:"portrait"`
-		IsPublic bool `json:"isPublic"`
+	type Platform struct {
+		Platform    string `json:"platform"`
+		ID          int    `json:"id"`
+		Name        string `json:"name"`
+		URLName     string `json:"urlName"`
+		PlayerLevel int    `json:"playerLevel"`
+		Portrait    string `json:"portrait"`
+		IsPublic    bool   `json:"isPublic"`
 	}
-	var apiRes []User
-	if err := httpclient.GetJSON(url, &apiRes); err != nil {
+	var platforms []Platform
+	if err := httpclient.GetJSON(url, &platforms); err != nil {
 		return nil, ErrPlayerNotFound
 	}
 
-	if len(apiRes) == 1 {
-		ps.Private = !apiRes[0].IsPublic
-		ps.Prestige = int(math.Floor(float64(apiRes[0].PlayerLevel) / 100))
+	for _, p := range platforms {
+		if p.Platform == platform {
+			ps.Name = p.Name
+			ps.Private = p.IsPublic
+			ps.Prestige = int(math.Floor(float64(p.PlayerLevel) / 100))
+		}
+	}
+
+	if pd.Find("p.masthead-permission-level-text").First().Text() == "Private Profile" {
+		ps.Private = true
+		return &ps, nil
 	}
 
 	ps.QuickPlayStats = parseDetailedStats(pd.Find("div#quickplay").First())
@@ -131,7 +139,6 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 
 	// Populates all general player information
 	ps.Icon, _ = s.Find("img.player-portrait").Attr("src")
-	ps.Name = s.Find("h1.header-masthead").Text()
 	ps.Level, _ = strconv.Atoi(s.Find("div.player-level div.u-vertical-center").First().Text())
 	ps.LevelIcon, _ = s.Find("div.player-level").Attr("style")
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, "background-image:url(", "", -1)
