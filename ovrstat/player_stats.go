@@ -116,7 +116,6 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	for _, p := range platforms {
 		if p.Platform == platform {
 			ps.Name = p.Name
-			ps.Private = p.IsPublic
 			ps.Prestige = int(math.Floor(float64(p.PlayerLevel) / 100))
 		}
 	}
