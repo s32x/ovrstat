@@ -170,10 +170,10 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 
 	heroStatsSelector.Find("div.progress-category").Each(func(i int, heroGroupSel *goquery.Selection) {
 		categoryID, _ := heroGroupSel.Attr("data-category-id")
-		categoryID = strings.Replace(categoryID, "overwatch.guid.0x0860000000000", "", -1)
-		heroGroupSel.Find("div.progress-2").Each(func(i2 int, statSel *goquery.Selection) {
-			heroName := cleanJSONKey(statSel.Find("div.title").Text())
-			statVal := statSel.Find("div.description").Text()
+		categoryID = strings.Replace(categoryID, "0x0860000000000", "", -1)
+		heroGroupSel.Find("div.ProgressBar").Each(func(i2 int, statSel *goquery.Selection) {
+			heroName := cleanJSONKey(statSel.Find("div.ProgressBar-title").Text())
+			statVal := statSel.Find("div.ProgressBar-description").Text()
 
 			// Creates hero map if it doesn't exist
 			if bhsMap[heroName] == nil {
@@ -241,7 +241,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 			statType = cleanJSONKey(statType)
 
 			// Iterates over stat row
-			statBoxSel.Find("table.data-table tbody tr").Each(func(i3 int, statSel *goquery.Selection) {
+			statBoxSel.Find("table.DataTable tbody tr").Each(func(i3 int, statSel *goquery.Selection) {
 
 				// Iterates over every stat td
 				statKey := ""
