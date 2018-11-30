@@ -7,7 +7,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/starboy/ovrstat/ovrstat"
+	"github.com/s32x/ovrstat/ovrstat"
 )
 
 var (

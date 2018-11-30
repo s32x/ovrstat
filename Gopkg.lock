@@ -76,7 +76,7 @@
 [[projects]]
   branch = "master"
   digest = "1:bd861e00932d8d829f8dbe1da79ca8192383ec60782cc4c0438c22232bb3f84f"
-  name = "github.com/starboy/httpclient"
+  name = "github.com/s32x/httpclient"
   packages = ["."]
   pruneopts = "UT"
   revision = "d6d6e42b608037f8e4c37fd3a55d6819c44a99f1"
@@ -135,7 +135,7 @@
     "github.com/jinzhu/inflection",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
-    "github.com/starboy/httpclient",
+    "github.com/s32x/httpclient",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

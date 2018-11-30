@@ -11,7 +11,7 @@ import (
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/starboy/httpclient"
+	"github.com/s32x/httpclient"
 )
 
 const (

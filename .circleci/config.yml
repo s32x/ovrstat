@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src/github.com/starboy/ovrstat
+    working_directory: /go/src/github.com/s32x/ovrstat
     environment:
       - DOCKER_TAG: sdwolfe32/ovrstat
     docker:

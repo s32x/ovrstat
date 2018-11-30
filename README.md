@@ -1,6 +1,6 @@
 # ovrstat
 
-[![GoDoc](https://godoc.org/github.com/starboy/ovrstat/goow?status.svg)](https://godoc.org/github.com/starboy/ovrstat/goow)
+[![GoDoc](https://godoc.org/github.com/s32x/ovrstat/goow?status.svg)](https://godoc.org/github.com/s32x/ovrstat/goow)
 
 ![](web/assets/ovrstatdarksmall.png "ovrstat")
 
@@ -10,17 +10,17 @@ Note: This is a single endpoint web-scraping API that takes the full payload of 
 
 ### Running with Docker
 ```
-docker run -p 8080:8080 starboy/ovrstat
+docker run -p 8080:8080 s23x/ovrstat
 ```
 ### Installing
 ```
-go get github.com/starboy/ovrstat/ovrstat
+go get s32x.com/ovrstat
 ```
 ### Usage
 
 You have two options for using the API: 
 * Import the child dependency used in this API and use the API we host on Heroku
-* Host your own Ovrstat API using the public docker image `starboy/ovrstat`.
+* Host your own Ovrstat API using the public docker image `s32x/ovrstat`.
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
@@ -45,7 +45,7 @@ package main
 import (
 	"log"
 
-	"github.com/starboy/ovrstat/ovrstat"
+	"s32x.com/ovrstat"
 )
 
 func main() {

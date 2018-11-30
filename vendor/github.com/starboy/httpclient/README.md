@@ -1,7 +1,7 @@
 <div align="center">
     <img src="logo.png" height="101" width="350" /><br/>
-    <a href="https://godoc.org/github.com/starboy/httpclient">
-        <img src="https://godoc.org/github.com/starboy/httpclient?status.svg" />
+    <a href="https://godoc.org/github.com/s32x/httpclient">
+        <img src="https://godoc.org/github.com/s32x/httpclient?status.svg" />
     </a>
 </div>
 
@@ -12,10 +12,10 @@ httpclient is a simple convenience package for performing http/api requests in G
 ```go
 package main
 
-import "github.com/starboy/httpclient"
+import "github.com/s32x/httpclient"
 
 func main() {
-	s, err := httpclient.GetString("https://api.github.com/users/starboy/repos")
+	s, err := httpclient.GetString("https://api.github.com/users/s32x/repos")
 	if err != nil {
 		panic(err)
 	}
