@@ -1,4 +1,4 @@
-package ovrstat
+package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/s32x/httpclient"
+	"s32x.com/httpclient"
 )
 
 const (

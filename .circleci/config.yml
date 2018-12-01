@@ -1,22 +1,20 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src/github.com/s32x/ovrstat
+    working_directory: /go/src/s32x.com/ovrstat
     environment:
-      - DOCKER_TAG: sdwolfe32/ovrstat
+      - DOCKER_TAG: s32x/ovrstat
+      - HEROKU_APP: ovrstat
     docker:
-      - image: circleci/golang:latest
+      - image: circleci/golang:1.11.2
     steps:
       - checkout
       - run:
-          name: Install Glide
-          command: go get github.com/Masterminds/glide
-      - run:
-          name: Download vendored Go dependencies
-          command: glide install
+          name: Run unit tests
+          command: make test
       - run:
           name: Build binary for Alpine linux
-          command: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/ovrstat
+          command: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/server
       - setup_remote_docker
       - run:
           name: Build Docker image with binary
@@ -27,3 +25,12 @@ jobs:
       - run:
           name: Push image to DockerHub
           command: docker push $DOCKER_TAG
+      - run:
+          name: Login to Heroku
+          command: heroku container:login
+      - run:
+          name: Push the image to Heroku
+          command: heroku container:push web -a $HEROKU_APP
+      - run:
+          name: Release the Heroku app
+          command: heroku container:release web -a $HEROKU_APP

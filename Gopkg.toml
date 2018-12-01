@@ -39,7 +39,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/s32x/httpclient"
+  name = "s32x.com/httpclient"
 
 [prune]
   go-tests = true

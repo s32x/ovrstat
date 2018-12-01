@@ -12,7 +12,7 @@ httpclient is a simple convenience package for performing http/api requests in G
 ```go
 package main
 
-import "github.com/s32x/httpclient"
+import "s32x.com/httpclient"
 
 func main() {
 	s, err := httpclient.GetString("https://api.github.com/users/s32x/repos")

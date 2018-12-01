@@ -1,4 +1,4 @@
-package httpclient
+package httpclient /* import "s32x.com/httpclient" */
 
 // httpclient is a convenience package for executing HTTP requests. It's safe
 // in that it always closes response bodies and returns byte slices, strings or
@@ -6,6 +6,7 @@ package httpclient
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"net/http"
 	"time"
@@ -18,18 +19,23 @@ type Client struct {
 	headers map[string]string
 }
 
-// DefaultClient is a default Client for using without having to declare a
-// Client
-var DefaultClient = NewBaseClient()
+// DefaultClient is a basic Client for use without needing to define a Client
+var DefaultClient = New()
 
-// NewBaseClient creates a new Client reference given a client timeout
-func NewBaseClient() *Client {
+// New creates a new Client reference given a client timeout
+func New() *Client {
 	return &Client{client: &http.Client{}}
 }
 
 // SetTimeout sets the timeout on the httpclients client
 func (c *Client) SetTimeout(timeout time.Duration) *Client {
 	c.client.Timeout = timeout
+	return c
+}
+
+// SetTransport sets the Transport on the httpclients client
+func (c *Client) SetTransport(transport *http.Transport) *Client {
+	c.client.Transport = transport
 	return c
 }
 
@@ -47,11 +53,23 @@ func (c *Client) SetHeaders(headers map[string]string) *Client {
 	return c
 }
 
-// Do performs the request and returns a fully populated Response
-func (c *Client) Do(req *Request) (*Response, error) {
-	// Build the full request URL
-	url := c.baseURL + req.Path
+// DoWithStatus performs the request and asserts the status code on the response
+func (c *Client) DoWithStatus(req *Request, expectedStatus int) (*Response, error) {
+	// Perform the request
+	res, err := c.Do(req)
+	if err != nil {
+		return nil, err
+	}
 
+	// Assert the status and return the response
+	if res.StatusCode != expectedStatus {
+		return res, errors.New("Unexpected status-code on response")
+	}
+	return res, nil
+}
+
+// Do performs the passed request and returns a fully populated response
+func (c *Client) Do(req *Request) (*Response, error) {
 	// Encode the body if one was passed
 	var b io.ReadWriter
 	if req.Body != nil {
@@ -59,12 +77,13 @@ func (c *Client) Do(req *Request) (*Response, error) {
 	}
 
 	// Generate a new request using the new URL
-	r, err := http.NewRequest(req.Method, url, b)
+	r, err := http.NewRequest(req.Method, c.baseURL+req.Path, b)
 	if err != nil {
 		return nil, err
 	}
 
-	// Add any client and passed headers to the new request
+	// Add all desired headers prioritizing request headers over global client
+	// headers
 	if c.headers != nil {
 		for k, v := range c.headers {
 			r.Header.Set(k, v)

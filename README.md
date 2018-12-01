@@ -45,7 +45,7 @@ package main
 import (
 	"log"
 
-	"s32x.com/ovrstat"
+	"s32x.com/ovrstat/ovrstat"
 )
 
 func main() {

@@ -1,5 +1,5 @@
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates
-ADD bin/ovrstat /usr/local/bin/ovrstat
+ADD bin/server /usr/local/bin/server
 ADD /web /web/
 CMD ovrstat

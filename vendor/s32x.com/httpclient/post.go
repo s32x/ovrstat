@@ -1,4 +1,4 @@
-package httpclient
+package httpclient /* import "s32x.com/httpclient" */
 
 import (
 	"encoding/json"
@@ -22,10 +22,13 @@ func (c *Client) PostJSON(path string, headers map[string]string, in, out interf
 	return json.Unmarshal(res, out)
 }
 
-// PostBytes performs a POST request using the passed path and body
+// PostBytes performs a POST request using the passed path, headers and body.
+// It expects a 200 code status in the response and returns the bytes on the
+// response
 func (c *Client) PostBytes(path string, headers map[string]string, in []byte) ([]byte, error) {
 	// Execute the request and return the response
-	res, err := c.Do(NewRequest(http.MethodPost, path, headers, in))
+	res, err := c.DoWithStatus(NewRequest(http.MethodPost, path, headers, in),
+		http.StatusOK)
 	if err != nil {
 		return nil, err
 	}

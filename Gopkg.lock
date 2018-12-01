@@ -74,14 +74,6 @@
   version = "v0.0.4"
 
 [[projects]]
-  branch = "master"
-  digest = "1:bd861e00932d8d829f8dbe1da79ca8192383ec60782cc4c0438c22232bb3f84f"
-  name = "github.com/s32x/httpclient"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "d6d6e42b608037f8e4c37fd3a55d6819c44a99f1"
-
-[[projects]]
   digest = "1:c468422f334a6b46a19448ad59aaffdfc0a36b08fdcc1c749a0b29b6453d7e59"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
@@ -117,7 +109,7 @@
     "html/atom",
   ]
   pruneopts = "UT"
-  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
+  revision = "351d144fa1fc0bd934e2408202be0c29f25e35a0"
 
 [[projects]]
   branch = "master"
@@ -127,6 +119,14 @@
   pruneopts = "UT"
   revision = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31"
 
+[[projects]]
+  branch = "master"
+  digest = "1:abab09029c9f3e230022c4d464de8928dde3519cb8b58a50ac0f1b18ab34de9e"
+  name = "s32x.com/httpclient"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "84486942e25351d873b0bfe2786c2588e5fcb094"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -135,7 +135,7 @@
     "github.com/jinzhu/inflection",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
-    "github.com/s32x/httpclient",
+    "s32x.com/httpclient",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

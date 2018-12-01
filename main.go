@@ -1,4 +1,4 @@
-package main
+package main /* import "s32x.com/ovrstat" */
 
 import (
 	"fmt"
@@ -7,25 +7,24 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/s32x/ovrstat/ovrstat"
+	"s32x.com/ovrstat/ovrstat"
 )
 
 var (
-	version = "0.4"
-	port    = getEnv("PORT", "8080")
-
+	// The port to run the service on
+	port = getEnv("PORT", "8080")
 	// ErrPlayerNotFound is thrown when a request is made for a player that doesn't exist
 	ErrPlayerNotFound = echo.NewHTTPError(http.StatusNotFound, "Player not found")
-
 	// ErrFailedLookup is thrown when there is an error retrieving an accounts stats
 	ErrFailedLookup = echo.NewHTTPError(http.StatusInternalServerError, "Failed to perform lookup")
 )
 
 func main() {
-	fmt.Printf("Ovrstat %s - Simple Overwatch Stats API\n", version)
+	fmt.Printf("Ovrstat - A Simple Overwatch Stats API\n")
 
 	// Create a server Builder and bind the endpoints
 	e := echo.New()
+	e.HideBanner = true
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
@@ -39,7 +38,6 @@ func main() {
 	e.Static("/assets", "web/assets")
 
 	// Listen on the specified port
-	fmt.Printf("Listening for requests on port : %s", port)
 	e.Logger.Fatal(e.Start(":" + port))
 }
 

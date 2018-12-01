@@ -1,4 +1,4 @@
-package ovrstat
+package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
 
 import (
 	"sort"

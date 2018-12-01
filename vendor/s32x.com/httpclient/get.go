@@ -1,4 +1,4 @@
-package httpclient
+package httpclient /* import "s32x.com/httpclient" */
 
 import (
 	"encoding/json"
@@ -41,10 +41,13 @@ func GetBytes(url string) ([]byte, error) {
 	return DefaultClient.GetBytes(url, nil)
 }
 
-// GetBytes performs a GET request using the passed path
+// GetBytes performs a GET request using the passed path and headers. It
+// expects a 200 code status in the response and returns the bytes on the
+// response
 func (c *Client) GetBytes(path string, headers map[string]string) ([]byte, error) {
 	// Execute the request and return the response
-	res, err := c.Do(NewRequest(http.MethodGet, path, headers, nil))
+	res, err := c.DoWithStatus(NewRequest(http.MethodGet, path, headers, nil),
+		http.StatusOK)
 	if err != nil {
 		return nil, err
 	}
