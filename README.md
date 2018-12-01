@@ -1,5 +1,6 @@
 # ovrstat
 
+[![Circle CI](https://circleci.com/gh/s32x/ovrstat/tree/master.svg?style=svg)](https://circleci.com/gh/s32x/ovrstat/tree/master)
 [![GoDoc](https://godoc.org/github.com/s32x/ovrstat/goow?status.svg)](https://godoc.org/github.com/s32x/ovrstat/goow)
 
 ![](web/assets/ovrstatdarksmall.png "ovrstat")
@@ -15,6 +16,7 @@ docker run -p 8080:8080 s23x/ovrstat
 ### Installing
 ```
 go get s32x.com/ovrstat
+ovrstat
 ```
 ### Usage
 

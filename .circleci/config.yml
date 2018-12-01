@@ -25,12 +25,3 @@ jobs:
       - run:
           name: Push image to DockerHub
           command: docker push $DOCKER_TAG
-      - run:
-          name: Login to Heroku
-          command: heroku container:login
-      - run:
-          name: Push the image to Heroku
-          command: heroku container:push web -a $HEROKU_APP
-      - run:
-          name: Release the Heroku app
-          command: heroku container:release web -a $HEROKU_APP
