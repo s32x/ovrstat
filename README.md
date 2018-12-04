@@ -1,7 +1,7 @@
 # ovrstat
 
 [![Circle CI](https://circleci.com/gh/s32x/ovrstat/tree/master.svg?style=svg)](https://circleci.com/gh/s32x/ovrstat/tree/master)
-[![GoDoc](https://godoc.org/github.com/s32x/ovrstat/goow?status.svg)](https://godoc.org/github.com/s32x/ovrstat/goow)
+[![GoDoc](https://godoc.org/s32x.com/ovrstat/ovrstat?status.svg)](https://godoc.org/s32x.com/ovrstat/ovrstat)
 
 ![](web/assets/ovrstatdarksmall.png "ovrstat")
 
@@ -11,7 +11,7 @@ Note: This is a single endpoint web-scraping API that takes the full payload of 
 
 ### Running with Docker
 ```
-docker run -p 8080:8080 s23x/ovrstat
+docker run -p 8080:8080 s32x/ovrstat
 ```
 ### Installing
 ```
