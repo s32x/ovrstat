@@ -1,4 +1,4 @@
-package service /* import "s32x.com/ovrstat/service" */
+package api /* import "s32x.com/ovrstat/api" */
 
 import (
 	"net/http"
@@ -15,8 +15,7 @@ var (
 	ErrFailedLookup = echo.NewHTTPError(http.StatusInternalServerError, "Failed to perform lookup")
 )
 
-// Start starts the ovrstat API service using the passed port for binding the
-// HTTP server to
+// Start starts the ovrstat API service using the passed params
 func Start(port string) {
 	// Create a server Builder and bind the endpoints
 	e := echo.New()
