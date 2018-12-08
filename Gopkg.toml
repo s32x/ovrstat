@@ -26,16 +26,16 @@
 
 
 [[constraint]]
+  branch = "master"
   name = "github.com/PuerkitoBio/goquery"
-  version = "1.5.0"
 
 [[constraint]]
   branch = "master"
   name = "github.com/jinzhu/inflection"
 
 [[constraint]]
+  branch = "master"
   name = "github.com/labstack/echo"
-  version = "3.3.8"
 
 [[constraint]]
   branch = "master"

@@ -1,28 +1,16 @@
-# ovrstat
+<p align="center">
+<img src="web/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
+<br>
+<a href="https://circleci.com/gh/s32x/ovrstat/tree/master"><img src="https://circleci.com/gh/s32x/ovrstat/tree/master.svg?style=svg" alt="CircleCI"></a>
+<a href="https://goreportcard.com/report/s32x.com/ovrstat"><img src="https://goreportcard.com/badge/s32x.com/ovrstat" alt="Go Report Card"></a>
+<a href="https://godoc.org/s32x.com/ovrstat/ovrstat"><img src="https://godoc.org/s32x.com/ovrstat/ovrstat?status.svg" alt="GoDoc"></a>
+</p>
 
-[![Circle CI](https://circleci.com/gh/s32x/ovrstat/tree/master.svg?style=svg)](https://circleci.com/gh/s32x/ovrstat/tree/master)
-[![GoDoc](https://godoc.org/s32x.com/ovrstat/ovrstat?status.svg)](https://godoc.org/s32x.com/ovrstat/ovrstat)
+`ovrstat` is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary. This is a single endpoint web-scraping API that takes the full payload of information that we retrieve from Blizzard and passes it through to you in a single response. Things like caching and splitting data across multiple responses could likely improve performance, but in pursuit of keeping things simple, ovrstat does not implement them.
 
-![](web/assets/ovrstatdarksmall.png "ovrstat")
+## Getting Started
 
-ovrstat is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary.
-
-Note: This is a single endpoint web-scraping API that takes the full payload of information that we retrieve from Blizzard and passes it through to you in a single response. Things like caching and splitting data across multiple responses could likely improve performance, but in pursuit of keeping things simple, ovrstat does not implement them.
-
-### Running with Docker
-```
-docker run -p 8080:8080 s32x/ovrstat
-```
-### Installing
-```
-go get s32x.com/ovrstat
-ovrstat
-```
-### Usage
-
-You have two options for using the API: 
-* Import the child dependency used in this API and use the API we host on Heroku
-* Host your own Ovrstat API using the public docker image `s32x/ovrstat`.
+### Public API Usage
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
@@ -31,13 +19,19 @@ https://ovrstat.com/stats/xbl/Lt%20Evolution
 https://ovrstat.com/stats/psn/TayuyaBreast
 ```
 
-And here is an example of using the included go library:
-```go
-player, _ := ovrstat.PCStats("us", "Viz-1213")
-player2, _ := ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution")
-player3, _ := ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast")
+### Installing
+To start using ovrstat on your local system, install Go and run `go get`:
 ```
-Both above examples should return to you a PlayerStats struct containing detailed statistics for the specified Overwatch player.
+$ go get -u s32x.com/ovrstat
+```
+This will install the ipdata binary on your machine.
+
+### Running with Docker
+To start using IPData via Docker, install Docker and run `docker run`:
+```
+docker run -p 8080:8080 s32x/ovrstat
+```
+This will retrieve the remote DockerHub image and start the service on port 8080.
 
 ## Full Go example
 

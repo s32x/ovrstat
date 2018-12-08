@@ -4,7 +4,6 @@ jobs:
     working_directory: /go/src/s32x.com/ovrstat
     environment:
       - DOCKER_TAG: s32x/ovrstat
-      - HEROKU_APP: ovrstat
     docker:
       - image: circleci/golang:1.11.2
     steps:

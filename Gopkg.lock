@@ -2,12 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
   digest = "1:573fa46f8d413d4bc3f7cc5e86b2c43cb21559f4fb0a19d9874d228e28fdc07c"
   name = "github.com/PuerkitoBio/goquery"
   packages = ["."]
   pruneopts = "UT"
   revision = "2d2796f41742ece03e8086188fa4db16a3a0b458"
-  version = "v1.5.0"
 
 [[projects]]
   digest = "1:66b3310cf22cdc96c35ef84ede4f7b9b370971c4025f394c89a2638729653b11"
@@ -34,15 +34,15 @@
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
-  digest = "1:73c5062c19c602b4d279b581b0ee3ffe43f61bfc37e91885b89190154bb5e909"
+  branch = "master"
+  digest = "1:65d4f80bcc1e8c92ac0e1bbb885b6e483ac98a348c48eb1e2b6642099d2d9311"
   name = "github.com/labstack/echo"
   packages = [
     ".",
     "middleware",
   ]
   pruneopts = "UT"
-  revision = "c7eb8da9ec73e78c4f38413f3f835e0cd52c7d72"
-  version = "v3.3.8"
+  revision = "3f8b45c8d0dd840198a6b24b3393e5ec553dcb85"
 
 [[projects]]
   digest = "1:764bce605f1c70823a567ac3205a03e6b7f375ca747d8820fded0b0abddda802"
@@ -109,15 +109,15 @@
     "html/atom",
   ]
   pruneopts = "UT"
-  revision = "351d144fa1fc0bd934e2408202be0c29f25e35a0"
+  revision = "610586996380ceef02dd726cc09df7e00a3f8e56"
 
 [[projects]]
   branch = "master"
-  digest = "1:8775d8a768d9e65e8b659172804aac5db1fc8d563ba766470a6c2698c57c61a7"
+  digest = "1:eadf44cffe7fd1f587d8a9bd36fa3eb959b9b8e51840bfba34754db00cdf7e6b"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31"
+  revision = "ad97f365e15054527b467150f898ec66d7f81e14"
 
 [[projects]]
   branch = "master"
