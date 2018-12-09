@@ -22,7 +22,7 @@ https://ovrstat.com/stats/psn/TayuyaBreast
 ### Installing
 To start using ovrstat on your local system, install Go and run `go get`:
 ```
-$ go get -u s32x.com/ovrstat
+$ go get s32x.com/ovrstat
 ```
 This will install the ipdata binary on your machine.
 
