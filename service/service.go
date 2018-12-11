@@ -19,12 +19,13 @@ var (
 
 // Start starts the ovrstat API service using the passed params
 func Start(port, env string) {
-	// Create a server Builder and bind the endpoints
+	// Create a new echo Echo and bind all middleware
 	e := echo.New()
 	e.HideBanner = true
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
+	e.Use(middleware.Gzip())
 
 	// Perform HTTP redirects and serve the web index if being hosted in prod
 	if strings.Contains(strings.ToLower(env), "prod") {

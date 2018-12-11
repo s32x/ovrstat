@@ -82,7 +82,7 @@
     "movinglater/gotools/gomods",
   ]
   pruneopts = "UT"
-  revision = "587570ab2cf750ca0d81b396916a5ed11e74acc0"
+  revision = "e26c8466f14d166c788e19ae99c5f077f9ea160b"
 
 [[projects]]
   branch = "master"
@@ -320,14 +320,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:268575c4d9e27391ede5e3559c7f41a15dbf108678672afade864e08d6c34574"
+  digest = "1:c73348dab344986c67ff12db47eee08aa2ec1f6bf431dcd73514c6dd8c502a57"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "2a47403f2ae58167c4d75973960ccc62b28cb0d8"
+  revision = "7da8ea5c81829e397bdf930c5d8ba4b703616f33"
 
 [[projects]]
   branch = "master"
@@ -340,7 +340,7 @@
     "internal/gopathwalk",
   ]
   pruneopts = "UT"
-  revision = "6a3e9aa2ab7749d72d1006ee484271b4a11f96c2"
+  revision = "59cd96f77e7ec4d6e1fc7489f61915a82879680d"
 
 [[projects]]
   branch = "master"
