@@ -1,18 +1,22 @@
 package main /* import "s32x.com/ovrstat" */
 
 import (
+	"log"
 	"os"
 
 	"s32x.com/ovrstat/service"
 )
 
-func main() { service.Start(getenv("PORT", "8080")) }
+func main() { service.Start(getenv("PORT", "8080"), getenv("ENV", "dev")) }
 
-// getenv retrieves a variable from the environment and falls back to a passed
-// default value if the key doesn't exist
-func getenv(key, def string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
+// getenv attempts to retrieve and return a variable from the environment. If it
+// fails it will either crash or failover to a passed default value
+func getenv(key string, def ...string) string {
+	if v, ok := os.LookupEnv(key); ok {
+		return v
 	}
-	return def
+	if len(def) == 0 {
+		log.Fatalf("%s not defined in environment", key)
+	}
+	return def[0]
 }

@@ -2,6 +2,7 @@ package service /* import "s32x.com/ovrstat/service" */
 
 import (
 	"net/http"
+	"strings"
 
 	packr "github.com/gobuffalo/packr/v2"
 	"github.com/labstack/echo"
@@ -17,7 +18,7 @@ var (
 )
 
 // Start starts the ovrstat API service using the passed params
-func Start(port string) {
+func Start(port, env string) {
 	// Create a server Builder and bind the endpoints
 	e := echo.New()
 	e.HideBanner = true
@@ -25,9 +26,14 @@ func Start(port string) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
-	// Serve the static web content
-	wb := packr.New("web box", "./web")
-	e.GET("*", echo.WrapHandler(http.FileServer(wb)))
+	// Perform HTTP redirects and serve the web index if being hosted in prod
+	if strings.Contains(strings.ToLower(env), "prod") {
+		e.Pre(middleware.HTTPSNonWWWRedirect())
+
+		// Serve the static web content
+		wb := packr.New("web box", "./web")
+		e.GET("*", echo.WrapHandler(http.FileServer(wb)))
+	}
 
 	// Handle stats API requests
 	e.GET("/stats/pc/:area/:tag", stats)
