@@ -12,8 +12,11 @@ jobs:
           name: Run unit tests
           command: make test
       - run:
+          name: Install Packr
+          command: go get -u github.com/gobuffalo/packr/v2/packr2
+      - run:
           name: Build binary for Alpine linux
-          command: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/server
+          command: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 packr2 build -o bin/server
       - setup_remote_docker
       - run:
           name: Build Docker image with binary

@@ -31,6 +31,10 @@
 
 [[constraint]]
   branch = "master"
+  name = "github.com/gobuffalo/packr"
+
+[[constraint]]
+  branch = "master"
   name = "github.com/jinzhu/inflection"
 
 [[constraint]]
