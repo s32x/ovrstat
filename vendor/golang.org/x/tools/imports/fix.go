@@ -200,7 +200,10 @@ func (p *pass) findMissingImport(pkg string, syms map[string]bool) *importInfo {
 		if !ok {
 			continue
 		}
-		if candidate.name != pkg && pkgInfo.name != pkg {
+		if candidate.name != "" && candidate.name != pkg {
+			continue
+		}
+		if pkgInfo.name != pkg {
 			continue
 		}
 
@@ -279,11 +282,7 @@ func (p *pass) load() bool {
 	// that we might want to mimic.
 	globals := map[string]bool{}
 	for _, otherFile := range p.otherFiles {
-		// Don't load globals from files that are in the same directory
-		// but a different package. Using them to suggest imports is OK.
-		if p.f.Name.Name == otherFile.Name.Name {
-			addGlobals(otherFile, globals)
-		}
+		addGlobals(otherFile, globals)
 		p.candidates = append(p.candidates, collectImports(otherFile)...)
 	}
 
@@ -374,7 +373,7 @@ func (p *pass) assumeSiblingImportsValid() {
 			if imp, ok := importsByName[left]; ok {
 				if _, ok := stdlib[imp.importPath]; ok {
 					// We have the stdlib in memory; no need to guess.
-					rights = stdlib[imp.importPath]
+					continue
 				}
 				p.addCandidate(imp, &packageInfo{
 					// no name; we already know it.
@@ -398,14 +397,7 @@ func (p *pass) addCandidate(imp *importInfo, pkg *packageInfo) {
 	}
 }
 
-// fixImports adds and removes imports from f so that all its references are
-// satisfied and there are no unused imports.
-//
-// This is declared as a variable rather than a function so goimports can
-// easily be extended by adding a file with an init function.
-var fixImports = fixImportsDefault
-
-func fixImportsDefault(fset *token.FileSet, f *ast.File, filename string) error {
+func fixImports(fset *token.FileSet, f *ast.File, filename string) error {
 	abs, err := filepath.Abs(filename)
 	if err != nil {
 		return err
@@ -514,7 +506,7 @@ func addGoPathCandidates(pass *pass, refs map[string]map[string]bool, filename s
 		go func(pkgName string, symbols map[string]bool) {
 			defer wg.Done()
 
-			ipath, err := findImport(ctx, pkgName, symbols, filename)
+			ipath, _, err := findImport(ctx, pkgName, symbols, filename)
 
 			if err != nil {
 				firstErrOnce.Do(func() {
@@ -555,6 +547,9 @@ func addGoPathCandidates(pass *pass, refs map[string]map[string]bool, filename s
 	return firstErr
 }
 
+// importPathToName returns the package name for the given import path.
+var importPathToName func(importPath, srcDir string) (packageName string) = importPathToNameGoPath
+
 // importPathToNameBasic assumes the package name is the base of import path,
 // except that if the path ends in foo/vN, it assumes the package name is foo.
 func importPathToNameBasic(importPath, srcDir string) (packageName string) {
@@ -572,7 +567,7 @@ func importPathToNameBasic(importPath, srcDir string) (packageName string) {
 
 // importPathToNameGoPath finds out the actual package name, as declared in its .go files.
 // If there's a problem, it falls back to using importPathToNameBasic.
-func importPathToName(importPath, srcDir string) (packageName string) {
+func importPathToNameGoPath(importPath, srcDir string) (packageName string) {
 	// Fast path for standard library without going to disk.
 	if _, ok := stdlib[importPath]; ok {
 		return path.Base(importPath) // stdlib packages always match their paths.
@@ -736,7 +731,9 @@ func VendorlessPath(ipath string) string {
 
 // loadExports returns the set of exported symbols in the package at dir.
 // It returns nil on error or if the package name in dir does not match expectPackage.
-func loadExports(ctx context.Context, expectPackage, dir string) (map[string]bool, error) {
+var loadExports func(ctx context.Context, expectPackage, dir string) (map[string]bool, error) = loadExportsGoPath
+
+func loadExportsGoPath(ctx context.Context, expectPackage, dir string) (map[string]bool, error) {
 	if Debug {
 		log.Printf("loading exports in dir %s (seeking package %s)", dir, expectPackage)
 	}
@@ -822,10 +819,19 @@ func loadExports(ctx context.Context, expectPackage, dir string) (map[string]boo
 
 // findImport searches for a package with the given symbols.
 // If no package is found, findImport returns ("", false, nil)
-func findImport(ctx context.Context, pkgName string, symbols map[string]bool, filename string) (foundPkg string, err error) {
+//
+// This is declared as a variable rather than a function so goimports
+// can be easily extended by adding a file with an init function.
+//
+// The rename value is ignored.
+var findImport func(ctx context.Context, pkgName string, symbols map[string]bool, filename string) (foundPkg string, rename bool, err error) = findImportGoPath
+
+// findImportGoPath is the normal implementation of findImport.
+// (Some companies have their own internally.)
+func findImportGoPath(ctx context.Context, pkgName string, symbols map[string]bool, filename string) (foundPkg string, rename bool, err error) {
 	pkgDir, err := filepath.Abs(filename)
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 	pkgDir = filepath.Dir(pkgDir)
 	// Scan $GOROOT and each $GOPATH.
@@ -910,9 +916,9 @@ func findImport(ctx context.Context, pkgName string, symbols map[string]bool, fi
 		if pkg == nil {
 			continue
 		}
-		return pkg.importPathShort, nil
+		return pkg.importPathShort, false, nil
 	}
-	return "", nil
+	return "", false, nil
 }
 
 // pkgIsCandidate reports whether pkg is a candidate for satisfying the
