@@ -142,7 +142,7 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.LevelIcon, _ = s.Find("div.player-level").Attr("style")
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, "background-image:url(", "", -1)
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, ")", "", -1)
-	ps.PrestigeIcon, _ = s.Find("div.player-level").Attr("style")
+	ps.PrestigeIcon, _ = s.Find("div.player-rank").Attr("style")
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, "background-image:url(", "", -1)
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, ")", "", -1)
 	ps.Endorsement, _ = strconv.Atoi(s.Find("div.endorsement-level div.u-center").First().Text())
