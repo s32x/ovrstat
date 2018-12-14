@@ -1,31 +1,21 @@
 clean:
 	-rm -rf bin
-	packr2 clean
 	go clean
 deps:
 	make clean
 	-rm -rf vendor
-	-rm -f go.mod
-	-rm -f go.sum
-	env GO111MODULE=on go mod init
-	env GO111MODULE=on go mod vendor
+	-rm -r glide.yaml
+	-rm -f glide.lock
+	glide init --non-interactive
+	glide install
 test:
 	go test ./...
 run:
 	make clean
-	packr2 build -o ./bin/server
-	packr2 clean
+	go build -o ./bin/server
+	go clean
 	./bin/server
 install:
 	make clean
 	make deps
-	packr2 install
-deploy:
-	make clean
-	make deps
-	make test
-	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 packr2 build -o ./bin/server
-	heroku container:login
-	heroku container:push web -a ovrstat
-	heroku container:release web -a ovrstat
-	make clean
+	go install

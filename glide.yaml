@@ -1,0 +1,8 @@
+package: s32x.com/ovrstat
+import:
+- package: github.com/PuerkitoBio/goquery
+- package: github.com/jinzhu/inflection
+- package: github.com/labstack/echo
+  subpackages:
+  - middleware
+- package: s32x.com/httpclient
