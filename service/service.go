@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	packr "github.com/gobuffalo/packr/v2"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"s32x.com/ovrstat/ovrstat"
@@ -26,12 +27,13 @@ func Start(port, env string) {
 	e.Use(middleware.CORS())
 	e.Use(middleware.Gzip())
 
-	// Perform HTTP redirects and serve the web index if being hosted in prod
+	// Configure HTTP redirects and serve the web index if being hosted in prod
 	if strings.Contains(strings.ToLower(env), "prod") {
 		e.Pre(middleware.HTTPSNonWWWRedirect())
 
 		// Serve the static web content
-		e.Static("*", "./web")
+		wb := packr.New("web box", "./web")
+		e.GET("*", echo.WrapHandler(http.FileServer(wb)))
 	}
 
 	// Handle stats API requests

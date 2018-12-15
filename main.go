@@ -7,7 +7,12 @@ import (
 	"s32x.com/ovrstat/service"
 )
 
-func main() { service.Start(getenv("PORT", "8080"), getenv("ENV", "dev")) }
+func main() {
+	service.Start(
+		getenv("PORT", "8080"),
+		getenv("ENV", "dev"),
+	)
+}
 
 // getenv attempts to retrieve and return a variable from the environment. If it
 // fails it will either crash or failover to a passed default value

@@ -4,16 +4,20 @@ jobs:
     working_directory: /go/src/s32x.com/ovrstat
     environment:
       - DOCKER_TAG: s32x/ovrstat
+      - HEROKU_APP: ovrstat
     docker:
       - image: circleci/golang:1.11.3
     steps:
       - checkout
       - run:
+          name: Install Packr
+          command: go get -u github.com/gobuffalo/packr/v2/packr2
+      - run:
           name: Run unit tests
           command: make test
       - run:
           name: Build binary for Alpine linux
-          command: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/server
+          command: env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 packr2 build -ldflags="-s -w" -o bin/server
       - setup_remote_docker
       - run:
           name: Build Docker image with binary
@@ -24,3 +28,15 @@ jobs:
       - run:
           name: Push image to DockerHub
           command: docker push $DOCKER_TAG
+      - run:
+          name: Install the Heroku CLI
+          command: curl https://cli-assets.heroku.com/install.sh | sh
+      - run:
+          name: Login to Heroku Containers
+          command: heroku container:login
+      - run:
+          name: Push the image to Heroku
+          command: heroku container:push web -a $HEROKU_APP
+      - run:
+          name: Release the image on Heroku
+          command: heroku container:release web -a $HEROKU_APP
