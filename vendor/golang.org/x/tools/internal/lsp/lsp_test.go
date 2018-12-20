@@ -35,8 +35,8 @@ func testLSP(t *testing.T, exporter packagestest.Exporter) {
 
 	// We hardcode the expected number of test cases to ensure that all tests
 	// are being executed. If a test is added, this number must be changed.
-	const expectedCompletionsCount = 44
-	const expectedDiagnosticsCount = 14
+	const expectedCompletionsCount = 60
+	const expectedDiagnosticsCount = 15
 	const expectedFormatCount = 3
 	const expectedDefinitionsCount = 16
 	const expectedTypeDefinitionsCount = 2
@@ -215,6 +215,9 @@ func (c completions) test(t *testing.T, exported *packagestest.Exported, s *serv
 				},
 			},
 		})
+		if err != nil {
+			t.Fatal(err)
+		}
 		var got []protocol.CompletionItem
 		for _, item := range list.Items {
 			// Skip all types with no details (builtin types).
