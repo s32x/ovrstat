@@ -6,7 +6,7 @@ jobs:
       - DOCKER_TAG: s32x/ovrstat
       - HEROKU_APP: ovrstat
     docker:
-      - image: circleci/golang:1.11.3
+      - image: circleci/golang:1.11.4
     steps:
       - checkout
       - run:
