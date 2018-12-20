@@ -24,6 +24,7 @@ func Start(port, env string) {
 	e.HideBanner = true
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORS())
 	e.Use(middleware.Secure())
 	e.Use(middleware.Gzip())
