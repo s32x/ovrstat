@@ -22,25 +22,34 @@ func Start(port, env string) {
 	// Create a new echo Echo and bind all middleware
 	e := echo.New()
 	e.HideBanner = true
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(middleware.RemoveTrailingSlash())
-	e.Use(middleware.CORS())
-	e.Use(middleware.Secure())
-	e.Use(middleware.Gzip())
+	e.Pre(middleware.RemoveTrailingSlashWithConfig(
+		middleware.TrailingSlashConfig{
+			Skipper:      middleware.DefaultSkipper,
+			RedirectCode: http.StatusPermanentRedirect,
+		}))
+	e.Pre(middleware.Secure())
 
 	// Configure HTTP redirects and serve the web index if being hosted in prod
 	if strings.Contains(strings.ToLower(env), "prod") {
 		e.Pre(middleware.HTTPSNonWWWRedirect())
-
-		// Serve the static web content
-		wb := packr.New("web box", "./web")
-		e.GET("*", echo.WrapHandler(http.FileServer(wb)))
 	}
 
+	// Bind remaining middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.Gzip())
+
+	// Serve the static web content on the base echo instance
+	wb := packr.New("web box", "./web")
+	e.GET("*", echo.WrapHandler(http.FileServer(wb)))
+
+	// Create the API group with separate middlewares
+	api := e.Group("/stats")
+	api.Use(middleware.CORS())
+
 	// Handle stats API requests
-	e.GET("/stats/pc/:area/:tag", stats)
-	e.GET("/stats/:area/:tag", stats)
+	api.GET("/pc/:area/:tag", stats)
+	api.GET("/:area/:tag", stats)
 
 	// Listen on the specified port
 	e.Logger.Fatal(e.Start(":" + port))
