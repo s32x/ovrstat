@@ -27,7 +27,6 @@ func Start(port, env string) {
 			Skipper:      middleware.DefaultSkipper,
 			RedirectCode: http.StatusPermanentRedirect,
 		}))
-	e.Pre(middleware.Secure())
 
 	// Configure HTTP redirects and serve the web index if being hosted in prod
 	if strings.Contains(strings.ToLower(env), "prod") {
@@ -35,6 +34,7 @@ func Start(port, env string) {
 	}
 
 	// Bind remaining middleware
+	e.Use(middleware.Secure())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.Gzip())
