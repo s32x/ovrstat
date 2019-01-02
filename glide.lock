@@ -1,5 +1,5 @@
 hash: 67ef1bb1d37222b0899450b253b71dc5751aa3907bb094722e78206d37429ec7
-updated: 2018-12-26T10:35:12.713925-05:00
+updated: 2019-01-01T19:31:08.956093-07:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 680b6a57bda4f657485ad44bdea42342ead737bc
@@ -35,7 +35,7 @@ imports:
 - name: github.com/gobuffalo/packd
   version: eca3b8fd66872a76119b189bbe0f58f776a2a39f
 - name: github.com/gobuffalo/packr
-  version: 679459352e18b4c74274a979d695fe13b68730c1
+  version: f9dae4b780be8e97f707c43bbfd6b694f8b9653a
   subpackages:
   - v2
   - v2/file
@@ -85,7 +85,7 @@ imports:
   - module
   - semver
 - name: github.com/sirupsen/logrus
-  version: 2067ea4241cec716fbd0ac90f42f339f963bff92
+  version: 6180652bb05834ae178c93911ddae14b689408b7
 - name: github.com/spf13/cobra
   version: d2d81d9a96e23f0255397222bb0b4e3165e492dc
 - name: github.com/spf13/pflag
@@ -106,7 +106,7 @@ imports:
   - html
   - html/atom
 - name: golang.org/x/sys
-  version: b4a75ba826a64a70990f11a225237acd6ef35c9f
+  version: 9a3f9b0469bbc6b8802087ae5c0af9f61502de01
   subpackages:
   - unix
   - windows
