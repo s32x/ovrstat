@@ -1,21 +1,16 @@
-clean:
-	-rm -rf bin
-	packr2 clean
 deps:
-	make clean
 	-rm -rf vendor
-	-rm -r glide.yaml
-	-rm -f glide.lock
-	glide cache-clear
-	glide init --non-interactive
-	glide install
+	-rm -f go.mod
+	-rm -f go.sum
+	go clean
+	GO111MODULE=on go mod init
+	GO111MODULE=on go mod vendor
 test:
 	go test ./...
-run:
-	make clean
-	packr2 build -ldflags="-s -w" -o ./bin/server
-	./bin/server
 install:
-	make clean
 	make deps
-	packr2 install
+	go install
+deploy:
+	heroku container:login
+	heroku container:push web -a ovrstat
+	heroku container:release web -a ovrstat
