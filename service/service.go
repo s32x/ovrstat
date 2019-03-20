@@ -40,6 +40,9 @@ func Start(port, env string) {
 
 	// Serve the static web content on the base echo instance
 	e.Static("*", "./service/static")
+	e.GET("/healthcheck", func(c echo.Context) error {
+		return c.NoContent(http.StatusOK)
+	})
 
 	// Create the API group with separate middlewares
 	api := e.Group("/stats")

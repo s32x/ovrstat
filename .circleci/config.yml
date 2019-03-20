@@ -4,17 +4,10 @@ jobs:
     working_directory: /go/src/s32x.com/ovrstat
     environment:
       - DOCKER_TAG: s32x/ovrstat
-      - HEROKU_APP: ovrstat
     docker:
-      - image: circleci/golang:1.11.5
+      - image: circleci/golang:1.12
     steps:
       - checkout
-      - run:
-          name: Download vendored Go dependencies
-          command: GO111MODULE=on go mod vendor
-      - run:
-          name: Run unit tests
-          command: make test
       - setup_remote_docker
       - run:
           name: Build Docker image with binary
@@ -25,9 +18,3 @@ jobs:
       - run:
           name: Push image to DockerHub
           command: docker push $DOCKER_TAG
-      - run:
-          name: Install the Heroku CLI
-          command: curl https://cli-assets.heroku.com/install.sh | sh
-      - run:
-          name: Deploy the app
-          command: make deploy

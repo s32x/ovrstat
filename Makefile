@@ -10,7 +10,3 @@ test:
 install:
 	make deps
 	go install
-deploy:
-	heroku container:login
-	heroku container:push web -a ovrstat
-	heroku container:release web -a ovrstat
