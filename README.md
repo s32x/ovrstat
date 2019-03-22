@@ -1,5 +1,5 @@
 <p align="center">
-<img src="service/static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
+<img src="static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
 <br>
 <a href="https://circleci.com/gh/s32x/ovrstat/tree/master"><img src="https://circleci.com/gh/s32x/ovrstat/tree/master.svg?style=svg" alt="CircleCI"></a>
 <a href="https://goreportcard.com/report/s32x.com/ovrstat"><img src="https://goreportcard.com/badge/s32x.com/ovrstat" alt="Go Report Card"></a>
