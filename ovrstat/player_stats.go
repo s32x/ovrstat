@@ -2,16 +2,18 @@ package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"math"
+	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
-	"s32x.com/httpclient"
 )
 
 const (
@@ -71,14 +73,19 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	// Create the profile url for scraping
 	url := baseURL + profilePath
 
-	// Performs the stats request
-	res, err := httpclient.GetBytes(url)
+	// Perform the stats request and decode the response
+	res, err := http.Get(url)
 	if err != nil {
-		return nil, ErrPlayerNotFound
+		return nil, err
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
 	}
 
 	// Parses the stats request into a goquery document
-	pd, err := goquery.NewDocumentFromReader(bytes.NewReader(res))
+	pd, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +100,7 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 
 	// Get user id from script at page
 	re := regexp.MustCompile(`window\.app\.career\.init\((\d+)\,`)
-	userID := re.FindStringSubmatch(string(res))[1]
+	userID := re.FindStringSubmatch(string(body))[1]
 
 	// Make new url to get answer from api
 	url = apiURL + userID
@@ -109,7 +116,12 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		IsPublic    bool   `json:"isPublic"`
 	}
 	var platforms []Platform
-	if err := httpclient.GetJSON(url, &platforms); err != nil {
+	res, err = http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	if err := json.NewDecoder(res.Body).Decode(&platforms); err != nil {
 		return nil, ErrPlayerNotFound
 	}
 
