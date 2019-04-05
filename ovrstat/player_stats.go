@@ -100,10 +100,10 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 
 	// Get user id from script at page
 	re := regexp.MustCompile(`window\.app\.career\.init\((\d+)\,`)
-	userID := re.FindStringSubmatch(string(body))[1]
-
-	// Make new url to get answer from api
-	url = apiURL + userID
+	split := re.FindStringSubmatch(string(body))
+	if len(split) < 2 {
+		return nil, ErrPlayerNotFound
+	}
 
 	// Perform api request
 	type Platform struct {
@@ -116,7 +116,7 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		IsPublic    bool   `json:"isPublic"`
 	}
 	var platforms []Platform
-	res, err = http.Get(url)
+	res, err = http.Get(apiURL + split[1])
 	if err != nil {
 		return nil, err
 	}
@@ -154,9 +154,11 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.LevelIcon, _ = s.Find("div.player-level").Attr("style")
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, "background-image:url(", "", -1)
 	ps.LevelIcon = strings.Replace(ps.LevelIcon, ")", "", -1)
+	ps.LevelIcon = strings.TrimSpace(ps.LevelIcon)
 	ps.PrestigeIcon, _ = s.Find("div.player-rank").Attr("style")
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, "background-image:url(", "", -1)
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, ")", "", -1)
+	ps.PrestigeIcon = strings.TrimSpace(ps.PrestigeIcon)
 	ps.Endorsement, _ = strconv.Atoi(s.Find("div.endorsement-level div.u-center").First().Text())
 	ps.EndorsementIcon, _ = s.Find("div.EndorsementIcon").Attr("style")
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, "background-image:url(", "", -1)
