@@ -1,2 +1,5 @@
-vendor
-bin
+/vendor
+/bin
+/out
+out.zip
+server
