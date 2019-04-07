@@ -10,4 +10,4 @@ test:
 	go test ./...
 
 deploy: deps test
-	up
+	up production
