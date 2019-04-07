@@ -6,7 +6,8 @@
   ],
   "stages": {
     "production": {
-      "domain": "ovrstat.com"
+      "domain": "ovrstat.com",
+      "zone": false
     }
   }
 }
