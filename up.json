@@ -9,5 +9,8 @@
       "domain": "ovrstat.com",
       "zone": false
     }
-  }
+  },
+  "error_pages": {
+    "disable": true
+}
 }
