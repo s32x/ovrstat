@@ -14,7 +14,7 @@ var port = getenv("PORT", "8080")
 
 var (
 	// ErrPlayerNotFound is thrown when a request is made for a player that doesn't exist
-	ErrPlayerNotFound = echo.NewHTTPError(http.StatusNotFound, "Player not found")
+	ErrPlayerNotFound = echo.NewHTTPError(http.StatusInternalServerError, "Player not found")
 	// ErrFailedLookup is thrown when there is an error retrieving an accounts stats
 	ErrFailedLookup = echo.NewHTTPError(http.StatusInternalServerError, "Failed to perform lookup")
 )
