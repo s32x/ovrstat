@@ -1,11 +1,9 @@
 package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"math"
 	"net/http"
 	"regexp"
@@ -78,17 +76,15 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
+
+	// Parses the stats request into a goquery document
+	pd, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	// Parses the stats request into a goquery document
-	pd, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
-	if err != nil {
-		return nil, err
-	}
+	// Close body right here, because we will do another request
+	res.Body.Close()
 
 	// Checks if profile not found, site still returns 200 in this case
 	if pd.Find("h1.u-align-center").First().Text() == "Profile Not Found" {
@@ -99,8 +95,13 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
 
 	// Get user id from script at page
+	code, err := pd.Html()
+	if err != nil {
+		return nil, err
+	}
+
 	re := regexp.MustCompile(`window\.app\.career\.init\((\d+)\,`)
-	split := re.FindStringSubmatch(string(body))
+	split := re.FindStringSubmatch(code)
 	if len(split) < 2 {
 		return nil, ErrPlayerNotFound
 	}
@@ -120,10 +121,14 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+
+	// Decode received JSON
 	if err := json.NewDecoder(res.Body).Decode(&platforms); err != nil {
 		return nil, ErrPlayerNotFound
 	}
+
+	// Close it again
+	res.Body.Close()
 
 	for _, p := range platforms {
 		if p.Platform == platform {
