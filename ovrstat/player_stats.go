@@ -76,15 +76,13 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	// Parses the stats request into a goquery document
 	pd, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return nil, err
 	}
-
-	// Close body right here, because we will do another request
-	res.Body.Close()
 
 	// Checks if profile not found, site still returns 200 in this case
 	if pd.Find("h1.u-align-center").First().Text() == "Profile Not Found" {
@@ -117,18 +115,16 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		IsPublic    bool   `json:"isPublic"`
 	}
 	var platforms []Platform
-	res, err = http.Get(apiURL + split[1])
+	apires, err = http.Get(apiURL + split[1])
 	if err != nil {
 		return nil, err
 	}
+	defer apires.Body.Close()
 
 	// Decode received JSON
-	if err := json.NewDecoder(res.Body).Decode(&platforms); err != nil {
+	if err := json.NewDecoder(apires.Body).Decode(&platforms); err != nil {
 		return nil, ErrPlayerNotFound
 	}
-
-	// Close it again
-	res.Body.Close()
 
 	for _, p := range platforms {
 		if p.Platform == platform {
