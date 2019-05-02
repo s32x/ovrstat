@@ -45,7 +45,7 @@ import (
 )
 
 func main() {
-	log.Println(ovrstat.PCStats("us", "Viz-1213"))
+	log.Println(ovrstat.PCStats("Viz-1213"))
 	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution"))
 	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast"))
 }
