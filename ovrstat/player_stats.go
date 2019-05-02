@@ -115,7 +115,7 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		IsPublic    bool   `json:"isPublic"`
 	}
 	var platforms []Platform
-	apires, err = http.Get(apiURL + split[1])
+	apires, err := http.Get(apiURL + split[1])
 	if err != nil {
 		return nil, err
 	}
