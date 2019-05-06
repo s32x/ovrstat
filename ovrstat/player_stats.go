@@ -25,34 +25,28 @@ const (
 	// PlatformPSN is the platform : Playstation Network
 	PlatformPSN = "psn"
 
-	// RegionEU is the region : European Union
-	RegionEU = "eu"
-
-	// RegionUS is the region : United States
-	RegionUS = "us"
-
-	// RegionKR is region : Korea
-	RegionKR = "kr"
+	// PlatformPC is the platform : PC
+	PlatformPC = "pc"
 )
 
 var (
 	// ErrPlayerNotFound is thrown when a player doesn't exist
 	ErrPlayerNotFound = errors.New("Player not found")
 
-	// ErrInvalidPlatformOrRegion is thrown when the passed params are incorrect
-	ErrInvalidPlatformOrRegion = errors.New("Invalid platform or region")
+	// ErrInvalidPlatform is thrown when the passed params are incorrect
+	ErrInvalidPlatform = errors.New("Invalid platform")
 )
 
 // Stats retrieves player stats
 // Universal method if you don't need to differentiate it
 func Stats(area, tag string) (*PlayerStats, error) {
 	switch area {
-	case RegionEU, RegionUS, RegionKR:
-		return PCStats(area, tag) // Perform a stats lookup for PC
+	case PlatformPC:
+		return PCStats(tag) // Perform a stats lookup for PC
 	case PlatformPSN, PlatformXBL:
 		return ConsoleStats(area, tag) // Perform a stats lookup for Console
 	default:
-		return nil, ErrInvalidPlatformOrRegion
+		return nil, ErrInvalidPlatform
 	}
 }
 
@@ -62,8 +56,8 @@ func ConsoleStats(platform, tag string) (*PlayerStats, error) {
 }
 
 // PCStats retrieves player stats for PC
-func PCStats(region, tag string) (*PlayerStats, error) {
-	return playerStats(fmt.Sprintf("/pc/%s/%s", region, tag), "pc")
+func PCStats(tag string) (*PlayerStats, error) {
+	return playerStats(fmt.Sprintf("/pc/%s", tag), "pc")
 }
 
 // playerStats retrieves all Overwatch statistics for a given player
