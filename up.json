@@ -2,7 +2,8 @@
   "name": "ovrstat",
   "profile": "default",
   "lambda": {
-    "warm": true
+    "warm": true,
+    "warm_count": 5
   },
   "regions": [
     "us-east-1"
