@@ -1,4 +1,4 @@
-package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
+package ovrstat
 
 import (
 	"encoding/json"

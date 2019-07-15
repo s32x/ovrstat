@@ -1,4 +1,4 @@
-package main /* import "s32x.com/ovrstat" */
+package main
 
 import (
 	"log"

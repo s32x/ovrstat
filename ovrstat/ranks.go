@@ -1,4 +1,4 @@
-package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
+package ovrstat
 
 // rankMap contains all mappings for Overwatch competitive ranks
 var rankMap = map[string]int{
