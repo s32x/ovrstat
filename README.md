@@ -14,7 +14,7 @@
 
 Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
 ```
-https://ovrstat.com/stats/pc/us/Viz-1213
+https://ovrstat.com/stats/pc/Viz-1213
 https://ovrstat.com/stats/xbl/Lt%20Evolution
 https://ovrstat.com/stats/psn/TayuyaBreast
 ```

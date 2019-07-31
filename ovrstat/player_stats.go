@@ -2,7 +2,6 @@ package ovrstat
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -12,6 +11,7 @@ import (
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -39,12 +39,12 @@ var (
 
 // Stats retrieves player stats
 // Universal method if you don't need to differentiate it
-func Stats(area, tag string) (*PlayerStats, error) {
-	switch area {
+func Stats(platform, tag string) (*PlayerStats, error) {
+	switch platform {
 	case PlatformPC:
 		return PCStats(tag) // Perform a stats lookup for PC
 	case PlatformPSN, PlatformXBL:
-		return ConsoleStats(area, tag) // Perform a stats lookup for Console
+		return ConsoleStats(platform, tag) // Perform a stats lookup for Console
 	default:
 		return nil, ErrInvalidPlatform
 	}
@@ -68,14 +68,14 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	// Perform the stats request and decode the response
 	res, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Failed to retrieve profile")
 	}
 	defer res.Body.Close()
 
 	// Parses the stats request into a goquery document
 	pd, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Failed to create goquery document")
 	}
 
 	// Checks if profile not found, site still returns 200 in this case
@@ -111,13 +111,13 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	var platforms []Platform
 	apires, err := http.Get(apiURL + split[1])
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Failed to perform platform API request")
 	}
 	defer apires.Body.Close()
 
 	// Decode received JSON
 	if err := json.NewDecoder(apires.Body).Decode(&platforms); err != nil {
-		return nil, ErrPlayerNotFound
+		return nil, errors.Wrap(err, "Failed to decode platform API response")
 	}
 
 	for _, p := range platforms {

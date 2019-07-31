@@ -7,17 +7,11 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/pkg/errors"
 	"s32x.com/ovrstat/ovrstat"
 )
 
 var port = getenv("PORT", "8080")
-
-var (
-	// ErrPlayerNotFound is thrown when a request is made for a player that doesn't exist
-	ErrPlayerNotFound = echo.NewHTTPError(http.StatusInternalServerError, "Player not found")
-	// ErrFailedLookup is thrown when there is an error retrieving an accounts stats
-	ErrFailedLookup = echo.NewHTTPError(http.StatusInternalServerError, "Failed to perform lookup")
-)
 
 func main() {
 	// Create a new echo Echo and bind all middleware
@@ -39,8 +33,7 @@ func main() {
 	e.Static("*", "./static")
 
 	// Handle stats API requests
-	e.GET("/stats/pc/:area/:tag", stats)
-	e.GET("/stats/:area/:tag", stats)
+	e.GET("/stats/:platform/:tag", stats)
 	e.GET("/healthcheck", func(c echo.Context) error {
 		return c.NoContent(http.StatusOK)
 	})
@@ -52,14 +45,29 @@ func main() {
 // stats handles retrieving and serving Overwatch stats in JSON
 func stats(c echo.Context) error {
 	// Perform a full player stats lookup
-	stats, err := ovrstat.Stats(c.Param("area"), c.Param("tag"))
+	stats, err := ovrstat.Stats(c.Param("platform"), c.Param("tag"))
 	if err != nil {
 		if err == ovrstat.ErrPlayerNotFound {
-			return ErrPlayerNotFound
+			return newErr(http.StatusNotFound, "Player not found")
 		}
-		return ErrFailedLookup
+		return newErr(http.StatusInternalServerError,
+			errors.Wrap(err, "Failed to retrieve player stats"))
 	}
 	return c.JSON(http.StatusOK, stats)
+}
+
+// newErr creates and returns a new echo HTTPError with the passed status code
+// and optional message. Message expected to be of type string or error
+func newErr(code int, message ...interface{}) error {
+	if len(message) > 0 {
+		switch v := message[0].(type) {
+		case error:
+			return echo.NewHTTPError(code, v.Error())
+		case string:
+			return echo.NewHTTPError(code, v)
+		}
+	}
+	return echo.NewHTTPError(code, "An error has occurred")
 }
 
 // getenv attempts to retrieve and return a variable from the environment. If it

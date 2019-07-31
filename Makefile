@@ -4,6 +4,7 @@ init:
 
 deps:
 	-rm -rf ./vendor go.sum
+	GO111MODULE=on go mod tidy
 	GO111MODULE=on go mod vendor
 	
 test:
