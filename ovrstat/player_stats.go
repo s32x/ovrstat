@@ -154,12 +154,30 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, "background-image:url(", "", -1)
 	ps.PrestigeIcon = strings.Replace(ps.PrestigeIcon, ")", "", -1)
 	ps.PrestigeIcon = strings.TrimSpace(ps.PrestigeIcon)
-	ps.Endorsement, _ = strconv.Atoi(s.Find("div.endorsement-level div.u-center").First().Text())
+	ps.Endorsement, _ = strconv.Atoi(s.Find("div.EndorsementIcon-tooltip div.u-center").First().Text())
 	ps.EndorsementIcon, _ = s.Find("div.EndorsementIcon").Attr("style")
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, "background-image:url(", "", -1)
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, ")", "", -1)
-	ps.Rating, _ = strconv.Atoi(s.Find("div.competitive-rank div.u-align-center").First().Text())
-	ps.RatingIcon, _ = s.Find("div.competitive-rank img").Attr("src")
+
+	// Ratings.
+	s.Find("div.show-for-lg div.competitive-rank div.competitive-rank-role").Each(func(i int, rankSel *goquery.Selection) {
+		// Rank selections.
+		sel := rankSel.Find("div.competitive-rank-section")
+
+		role, _ := sel.Find("div.competitive-rank-tier.competitive-rank-tier-tooltip").Attr("data-ow-tooltip-text")
+		roleIcon, _ := sel.Find("img.competitive-rank-role-icon").Attr("src")
+		rankIcon, _ := sel.Find("div.competitive-rank-tier.competitive-rank-tier-tooltip img.competitive-rank-tier-icon").Attr("src")
+		level, _:= strconv.Atoi(sel.Find("div.competitive-rank-level").Text())
+		formatedRole := strings.TrimSuffix(role, " Skill Rating")
+
+		ps.Ratings =  append(ps.Ratings, Rating{
+			Level:    level,
+			Role:     strings.ToLower(formatedRole),
+			RoleIcon: roleIcon,
+			RankIcon: rankIcon,
+		})
+	})
+
 	ps.GamesWon, _ = strconv.Atoi(strings.Replace(s.Find("div.masthead p.masthead-detail.h4 span").Text(), " games won", "", -1))
 
 	return ps
@@ -192,23 +210,6 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 			// Sets hero stats based on stat category type
 			switch categoryID {
 			case "021":
-				// Time played in seconds
-				time := strings.Split(statVal, " ")
-				if len(time) == 2 {
-					digit, err := strconv.ParseInt(time[0], 10, 32)
-					if err != nil {
-						bhsMap[heroName].TimePlayedInSeconds = 0
-					}
-					if strings.HasPrefix(time[1], "second") {
-						bhsMap[heroName].TimePlayedInSeconds = int(digit)
-					}
-					if strings.HasPrefix(time[1], "minute") {
-						bhsMap[heroName].TimePlayedInSeconds = int(digit * 60)
-					}
-					if strings.HasPrefix(time[1], "hour") {
-						bhsMap[heroName].TimePlayedInSeconds = int(digit * 60 * 60)
-					}
-				}
 				bhsMap[heroName].TimePlayed = statVal
 			case "039":
 				bhsMap[heroName].GamesWon, _ = strconv.Atoi(statVal)
@@ -220,7 +221,7 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 				bhsMap[heroName].EliminationsPerLife, _ = strconv.ParseFloat(statVal, 64)
 			case "346":
 				bhsMap[heroName].MultiKillBest, _ = strconv.Atoi(statVal)
-			case "39C":
+			case "31C":
 				bhsMap[heroName].ObjectiveKills, _ = strconv.ParseFloat(statVal, 64)
 			}
 		})

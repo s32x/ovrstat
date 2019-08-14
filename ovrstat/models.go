@@ -2,20 +2,26 @@ package ovrstat
 
 // PlayerStats holds all stats on a specified Overwatch player
 type PlayerStats struct {
-	Icon             string          `json:"icon"`
-	Name             string          `json:"name"`
-	Level            int             `json:"level"`
-	LevelIcon        string          `json:"levelIcon"`
-	Endorsement      int             `json:"endorsement"`
-	EndorsementIcon  string          `json:"endorsementIcon"`
-	Prestige         int             `json:"prestige"`
-	PrestigeIcon     string          `json:"prestigeIcon"`
-	Rating           int             `json:"rating"`
-	RatingIcon       string          `json:"ratingIcon"`
-	GamesWon         int             `json:"gamesWon"`
-	QuickPlayStats   statsCollection `json:"quickPlayStats"`
-	CompetitiveStats statsCollection `json:"competitiveStats"`
-	Private          bool            `json:"private"`
+	Icon             string            `json:"icon"`
+	Name             string            `json:"name"`
+	Level            int               `json:"level"`
+	LevelIcon        string            `json:"levelIcon"`
+	Endorsement      int               `json:"endorsement"`
+	EndorsementIcon  string            `json:"endorsementIcon"`
+	Prestige         int               `json:"prestige"`
+	PrestigeIcon     string            `json:"prestigeIcon"`
+	Ratings          []Rating 		   `json:"ratings"`
+	GamesWon         int               `json:"gamesWon"`
+	QuickPlayStats   statsCollection   `json:"quickPlayStats"`
+	CompetitiveStats statsCollection   `json:"competitiveStats"`
+	Private          bool              `json:"private"`
+}
+
+type Rating struct {
+	Level    int    `json:"level"`
+	Role     string `json:"role"`
+	RoleIcon string `json:"roleIcon"`
+	RankIcon string `json:"rankIcon"`
 }
 
 // statsCollection holds a collection of stats for a particular player
@@ -27,7 +33,6 @@ type statsCollection struct {
 // topHeroStats holds basic stats for each hero
 type topHeroStats struct {
 	TimePlayed          string  `json:"timePlayed"`
-	TimePlayedInSeconds int     `json:"timePlayedInSeconds"`
 	GamesWon            int     `json:"gamesWon"`
 	WinPercentage       int     `json:"winPercentage"`
 	WeaponAccuracy      int     `json:"weaponAccuracy"`
