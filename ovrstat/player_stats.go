@@ -17,7 +17,7 @@ import (
 const (
 	baseURL = "https://playoverwatch.com/en-us/career"
 
-	apiURL = "https://playoverwatch.com/en-us/career/platforms/"
+	apiURL = "https://playoverwatch.com/en-us/search/account-by-name/"
 
 	// PlatformXBL is platform : XBOX
 	PlatformXBL = "xbl"
@@ -86,18 +86,6 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
 
-	// Get user id from script at page
-	code, err := pd.Html()
-	if err != nil {
-		return nil, err
-	}
-
-	re := regexp.MustCompile(`window\.app\.career\.init\((\d+)\,`)
-	split := re.FindStringSubmatch(code)
-	if len(split) < 2 {
-		return nil, ErrPlayerNotFound
-	}
-
 	// Perform api request
 	type Platform struct {
 		Platform    string `json:"platform"`
@@ -109,7 +97,7 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		IsPublic    bool   `json:"isPublic"`
 	}
 	var platforms []Platform
-	apires, err := http.Get(apiURL + split[1])
+	apires, err := http.Get(apiURL + strings.Replace(profilePath[strings.LastIndex(profilePath, "/")+1:], "-", "%23", -1))
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to perform platform API request")
 	}
@@ -167,10 +155,10 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 		role, _ := sel.Find("div.competitive-rank-tier.competitive-rank-tier-tooltip").Attr("data-ow-tooltip-text")
 		roleIcon, _ := sel.Find("img.competitive-rank-role-icon").Attr("src")
 		rankIcon, _ := sel.Find("div.competitive-rank-tier.competitive-rank-tier-tooltip img.competitive-rank-tier-icon").Attr("src")
-		level, _:= strconv.Atoi(sel.Find("div.competitive-rank-level").Text())
+		level, _ := strconv.Atoi(sel.Find("div.competitive-rank-level").Text())
 		formatedRole := strings.TrimSuffix(role, " Skill Rating")
 
-		ps.Ratings =  append(ps.Ratings, Rating{
+		ps.Ratings = append(ps.Ratings, Rating{
 			Level:    level,
 			Role:     strings.ToLower(formatedRole),
 			RoleIcon: roleIcon,
