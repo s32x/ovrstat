@@ -27,6 +27,8 @@ const (
 
 	// PlatformPC is the platform : PC
 	PlatformPC = "pc"
+
+	PlatformNS = "nintendo-switch"
 )
 
 var (
@@ -43,7 +45,7 @@ func Stats(platform, tag string) (*PlayerStats, error) {
 	switch platform {
 	case PlatformPC:
 		return PCStats(tag) // Perform a stats lookup for PC
-	case PlatformPSN, PlatformXBL:
+	case PlatformPSN, PlatformXBL, PlatformNS:
 		return ConsoleStats(platform, tag) // Perform a stats lookup for Console
 	default:
 		return nil, ErrInvalidPlatform
