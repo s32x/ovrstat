@@ -17,6 +17,7 @@ Below is an example of using the REST endpoint (note: CASE matters for the usern
 https://ovrstat.com/stats/pc/Viz-1213
 https://ovrstat.com/stats/xbl/Lt%20Evolution
 https://ovrstat.com/stats/psn/TayuyaBreast
+https://ovrstat.com/stats/nintendo-switch/Mario-70af1a16ae4913bde139d46edb43df55
 ```
 
 ### Installing
@@ -48,6 +49,7 @@ func main() {
 	log.Println(ovrstat.PCStats("Viz-1213"))
 	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution"))
 	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast"))
+    log.Println(ovrstat.ConsoleStats(ovrstat.PlatformNS, "Mario-70af1a16ae4913bde139d46edb43df55"))
 }
 ```
 
