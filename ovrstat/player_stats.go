@@ -150,7 +150,7 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, ")", "", -1)
 
 	// Ratings.
-	s.Find("div.show-for-lg div.competitive-rank div.competitive-rank-role").Each(func(i int, rankSel *goquery.Selection) {
+	s.Find("div.competitive-rank div.competitive-rank-role").Each(func(i int, rankSel *goquery.Selection) {
 		// Rank selections.
 		sel := rankSel.Find("div.competitive-rank-section")
 
@@ -231,12 +231,12 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 	})
 
 	// Iterates over every hero div
-	careerStatsSelector.Find("div.row div.js-stats").Each(func(i int, heroStatsSel *goquery.Selection) {
+	careerStatsSelector.Find("div.row.js-stats").Each(func(i int, heroStatsSel *goquery.Selection) {
 		currentHero, _ := heroStatsSel.Attr("data-category-id")
 		currentHero = cleanJSONKey(heroMap[currentHero])
 
 		// Iterates over every stat box
-		heroStatsSel.Find("div.column.xs-12").Each(func(i2 int, statBoxSel *goquery.Selection) {
+		heroStatsSel.Find("div.card-stat-block-container").Each(func(i2 int, statBoxSel *goquery.Selection) {
 			statType := statBoxSel.Find(".stat-title").Text()
 			statType = cleanJSONKey(statType)
 
