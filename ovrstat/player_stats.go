@@ -150,7 +150,7 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, ")", "", -1)
 
 	// Ratings.
-	s.Find("div.competitive-rank div.competitive-rank-role").Each(func(i int, rankSel *goquery.Selection) {
+	s.Find("div.masthead-player-progression:not(.masthead-player-progression--mobile) div.competitive-rank div.competitive-rank-role").Each(func(i int, rankSel *goquery.Selection) {
 		// Rank selections.
 		sel := rankSel.Find("div.competitive-rank-section")
 
