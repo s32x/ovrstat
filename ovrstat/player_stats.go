@@ -99,7 +99,14 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		IsPublic    bool   `json:"isPublic"`
 	}
 	var platforms []Platform
-	apires, err := http.Get(apiURL + strings.Replace(profilePath[strings.LastIndex(profilePath, "/")+1:], "-", "%23", -1))
+
+	apiPath := profilePath[strings.LastIndex(profilePath, "/")+1:]
+
+	if platform != PlatformPSN {
+		apiPath = strings.Replace(apiPath, "-", "%23", -1)
+	}
+
+	apires, err := http.Get(apiURL + apiPath)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to perform platform API request")
 	}
