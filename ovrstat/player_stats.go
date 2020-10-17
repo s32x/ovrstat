@@ -89,15 +89,6 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
 
 	// Perform api request
-	type Platform struct {
-		Platform    string `json:"platform"`
-		ID          int    `json:"id"`
-		Name        string `json:"name"`
-		URLName     string `json:"urlName"`
-		PlayerLevel int    `json:"playerLevel"`
-		Portrait    string `json:"portrait"`
-		IsPublic    bool   `json:"isPublic"`
-	}
 	var platforms []Platform
 
 	apiPath := profilePath[strings.LastIndex(profilePath, "/")+1:]
@@ -117,8 +108,34 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		return nil, errors.Wrap(err, "Failed to decode platform API response")
 	}
 
-	for _, p := range platforms {
-		if p.Platform == platform {
+	platforms = filterPlatform(platform, platforms)
+
+	switch len(platforms) {
+	case 0:
+		// Not found
+		return nil, ErrPlayerNotFound
+	case 1:
+		// Single, exact result
+		p := platforms[0]
+
+		ps.Name = p.Name
+		ps.Prestige = int(math.Floor(float64(p.PlayerLevel) / 100))
+	default:
+		// Matched multiple results (2+), use exact name if possible and the first result
+		var foundMatch bool
+
+		for _, p := range platforms {
+			if p.Name == ps.Name {
+				ps.Prestige = int(math.Floor(float64(p.PlayerLevel) / 100))
+
+				foundMatch = true
+				break
+			}
+		}
+
+		if !foundMatch {
+			p := platforms[0]
+
 			ps.Name = p.Name
 			ps.Prestige = int(math.Floor(float64(p.PlayerLevel) / 100))
 		}
@@ -133,6 +150,19 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	ps.CompetitiveStats = parseDetailedStats(pd.Find("div#competitive").First())
 
 	return &ps, nil
+}
+
+// Filters the platform slice to return only matching platforms
+func filterPlatform(platform string, platforms []Platform) []Platform {
+	out := make([]Platform, 0)
+
+	for _, p := range platforms {
+		if p.Platform == platform {
+			out = append(out, p)
+		}
+	}
+
+	return out
 }
 
 // populateGeneralInfo extracts the users general info and returns it in a
