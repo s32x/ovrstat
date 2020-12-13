@@ -1,7 +1,7 @@
 <p align="center">
 <img src="static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
 <br>
-<a href="https://circleci.com/gh/s32x/ovrstat/tree/master"><img src="https://circleci.com/gh/s32x/ovrstat/tree/master.svg?style=svg" alt="CircleCI"></a>
+<a href="https://github.com/s32x/ovrstat/actions"><img src="https://github.com/s32x/ovrstat/workflows/Deploy/badge.svg" alt="Actions"></a>
 <a href="https://goreportcard.com/report/s32x.com/ovrstat"><img src="https://goreportcard.com/badge/s32x.com/ovrstat" alt="Go Report Card"></a>
 <a href="https://godoc.org/s32x.com/ovrstat/ovrstat"><img src="https://godoc.org/s32x.com/ovrstat/ovrstat?status.svg" alt="GoDoc"></a>
 </p>
