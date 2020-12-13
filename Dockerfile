@@ -8,7 +8,6 @@ WORKDIR /src
 # Dependencies
 RUN apt-get update -y && \
     apt-get upgrade -y
-RUN GO111MODULE=on go mod vendor
 
 # Vendor, Test and Build the Binary
 RUN GO111MODULE=on go mod vendor
