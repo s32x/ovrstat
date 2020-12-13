@@ -24,6 +24,14 @@ jobs:
       - name: Build the apps server binary
         run: go build -v -o server .
       
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: s32x/cmd-api
+          tag_with_ref: true
+
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.7.8
         with:
