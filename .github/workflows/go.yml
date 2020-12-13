@@ -24,7 +24,8 @@ jobs:
       - name: Build the apps server binary
         run: go build -v -o server .
       
-      - uses: akhileshns/heroku-deploy@v3.7.8
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.7.8
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
