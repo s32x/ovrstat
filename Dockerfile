@@ -6,19 +6,20 @@ COPY . /src
 WORKDIR /src
 
 # Dependencies
-RUN apt-get update -y && \
-    apt-get upgrade -y
+RUN apt-get update -y 
+RUN apt-get upgrade -y
 
 # Vendor, Test and Build the Binary
-RUN GO111MODULE=on go mod vendor
+RUN go mod vendor
 RUN go test ./...
-RUN CGO_ENABLED=0 go build -o ./bin/server
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./bin/server
 
 # =============================== FINAL IMAGE ===============================
 FROM alpine:latest
 
 # Dependencies
-RUN apk update && apk add --no-cache ca-certificates
+RUN apk update 
+RUN apk add --no-cache ca-certificates
 
 # Static files and Binary
 COPY --from=builder /src/static /static
