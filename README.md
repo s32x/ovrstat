@@ -1,5 +1,5 @@
 <p align="center">
-<img src="static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
+<img src="service/static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
 <br>
 <a href="https://github.com/s32x/ovrstat/actions"><img src="https://github.com/s32x/ovrstat/workflows/Deploy/badge.svg" alt="Actions"></a>
 <a href="https://goreportcard.com/report/s32x.com/ovrstat"><img src="https://goreportcard.com/badge/s32x.com/ovrstat" alt="Go Report Card"></a>

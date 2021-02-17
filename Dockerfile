@@ -22,6 +22,6 @@ RUN apk update
 RUN apk add --no-cache ca-certificates
 
 # Static files and Binary
-COPY --from=builder /src/static /static
+COPY --from=builder /src/service/static /static
 COPY --from=builder /src/bin/server /usr/local/bin/server
 CMD ["server"]
