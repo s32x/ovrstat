@@ -9,7 +9,7 @@ import (
 )
 
 //go:embed static/*
-var static embed.FS
+var staticFS embed.FS
 
 // Start starts serving the service on the passed port
 func Start(port string) {
@@ -29,7 +29,7 @@ func Start(port string) {
 	e.Use(middleware.CORS())
 
 	// Serve the static web content on the base echo instance
-	e.GET("/*", echo.WrapHandler(http.FileServer(http.FS(static))),
+	e.GET("/*", echo.WrapHandler(http.FileServer(http.FS(staticFS))),
 		middleware.Rewrite(map[string]string{"/*": "/static/$1"}))
 
 	// Handle stats API requests
