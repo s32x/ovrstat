@@ -49,7 +49,7 @@ func main() {
 	log.Println(ovrstat.PCStats("Viz-1213"))
 	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformXBL, "Lt%20Evolution"))
 	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformPSN, "TayuyaBreast"))
-    log.Println(ovrstat.ConsoleStats(ovrstat.PlatformNS, "Mario-70af1a16ae4913bde139d46edb43df55"))
+	log.Println(ovrstat.ConsoleStats(ovrstat.PlatformNS, "Mario-70af1a16ae4913bde139d46edb43df55"))
 }
 ```
 

@@ -1,6 +1,6 @@
 module s32x.com/ovrstat
 
-go 1.15
+go 1.17
 
 require (
 	github.com/PuerkitoBio/goquery v1.6.1

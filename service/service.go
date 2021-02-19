@@ -1,11 +1,15 @@
 package service /* import "s32x.com/ovrstat/service" */
 
 import (
+	"embed"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
+
+//go:embed static/*
+var static embed.FS
 
 // Start starts serving the service on the passed port
 func Start(port string) {
@@ -25,7 +29,8 @@ func Start(port string) {
 	e.Use(middleware.CORS())
 
 	// Serve the static web content on the base echo instance
-	e.Static("*", "./static")
+	e.GET("/*", echo.WrapHandler(http.FileServer(http.FS(static))),
+		middleware.Rewrite(map[string]string{"/*": "/static/$1"}))
 
 	// Handle stats API requests
 	e.GET("/stats/:platform/:tag", stats)
