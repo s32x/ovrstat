@@ -44,7 +44,5 @@ func Echo() *echo.Echo {
 	e.GET("/healthcheck", func(c echo.Context) error {
 		return c.NoContent(http.StatusOK)
 	})
-
-	// Listen on the specified port
-	e.Logger.Fatal(e.Start(":" + port))
+	return e
 }
