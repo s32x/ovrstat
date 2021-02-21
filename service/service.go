@@ -13,6 +13,13 @@ var staticFS embed.FS
 
 // Start starts serving the service on the passed port
 func Start(port string) {
+	e := Echo()
+	// Listen on the specified port
+	e.Logger.Fatal(e.Start(":" + port))
+}
+
+// Echo creates and returns a new echo Echo for the service
+func Echo() *echo.Echo {
 	// Create a new echo Echo and bind all middleware
 	e := echo.New()
 	e.HideBanner = true
