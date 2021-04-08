@@ -95,7 +95,7 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	apiPath := tagPath
 
 	if platform == PlatformNS {
-		apiPath = apiPath[0:strings.Index(apiPath, "-")] + "/"
+		apiPath = apiPath[0:strings.Index(apiPath, "-")]
 	} else if platform != PlatformPSN {
 		apiPath = strings.Replace(apiPath, "-", "%23", -1)
 	}
