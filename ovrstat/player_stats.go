@@ -91,9 +91,12 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	// Perform api request
 	var platforms []Platform
 
-	apiPath := profilePath[strings.LastIndex(profilePath, "/")+1:]
+	tagPath := profilePath[strings.LastIndex(profilePath, "/")+1:]
+	apiPath := tagPath
 
-	if platform != PlatformPSN {
+	if platform == PlatformNS {
+		apiPath = apiPath[0:strings.Index(apiPath, "-")]
+	} else if platform != PlatformPSN {
 		apiPath = strings.Replace(apiPath, "-", "%23", -1)
 	}
 
@@ -108,7 +111,7 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		return nil, errors.Wrap(err, "Failed to decode platform API response")
 	}
 
-	platforms = filterPlatform(platform, platforms)
+	platforms = filterPlatform(tagPath, platform, platforms)
 
 	switch len(platforms) {
 	case 0:
@@ -153,11 +156,11 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 }
 
 // Filters the platform slice to return only matching platforms
-func filterPlatform(platform string, platforms []Platform) []Platform {
+func filterPlatform(tagPath, platform string, platforms []Platform) []Platform {
 	out := make([]Platform, 0)
 
 	for _, p := range platforms {
-		if p.Platform == platform {
+		if p.Platform == platform && (platform != PlatformNS || p.URLName == tagPath) {
 			out = append(out, p)
 		}
 	}
