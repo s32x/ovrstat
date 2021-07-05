@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -188,6 +189,15 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 	ps.EndorsementIcon, _ = s.Find("div.EndorsementIcon").Attr("style")
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, "background-image:url(", "", -1)
 	ps.EndorsementIcon = strings.Replace(ps.EndorsementIcon, ")", "", -1)
+
+	// Parse Endorsement Icon path (/svg?path=)
+	if strings.Index(ps.EndorsementIcon, "/svg") == 0 {
+		q, err := url.ParseQuery(ps.EndorsementIcon[strings.Index(ps.EndorsementIcon, "?")+1:])
+
+		if err == nil && q.Get("path") != "" {
+			ps.EndorsementIcon = q.Get("path")
+		}
+	}
 
 	// Ratings.
 	s.Find("div.masthead-player-progression:not(.masthead-player-progression--mobile) div.competitive-rank div.competitive-rank-role").Each(func(i int, rankSel *goquery.Selection) {
