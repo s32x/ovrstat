@@ -90,6 +90,7 @@ type (
 		HidePort         bool
 		HTTPErrorHandler HTTPErrorHandler
 		Binder           Binder
+		JSONSerializer   JSONSerializer
 		Validator        Validator
 		Renderer         Renderer
 		Logger           Logger
@@ -123,6 +124,12 @@ type (
 	// Validator is the interface that wraps the Validate function.
 	Validator interface {
 		Validate(i interface{}) error
+	}
+
+	// JSONSerializer is the interface that encodes and decodes JSON to and from interfaces.
+	JSONSerializer interface {
+		Serialize(c Context, i interface{}, indent string) error
+		Deserialize(c Context, i interface{}) error
 	}
 
 	// Renderer is the interface that wraps the Render function.
@@ -234,7 +241,7 @@ const (
 
 const (
 	// Version of Echo
-	Version = "4.2.0"
+	Version = "4.6.1"
 	website = "https://echo.labstack.com"
 	// http://patorjk.com/software/taag/#p=display&f=Small%20Slant&t=Echo
 	banner = `
@@ -315,6 +322,7 @@ func New() (e *Echo) {
 	e.TLSServer.Handler = e
 	e.HTTPErrorHandler = e.DefaultHTTPErrorHandler
 	e.Binder = &DefaultBinder{}
+	e.JSONSerializer = &DefaultJSONSerializer{}
 	e.Logger.SetLevel(log.ERROR)
 	e.StdLogger = stdLog.New(e.Logger.Output(), e.Logger.Prefix()+": ", 0)
 	e.pool.New = func() interface{} {
@@ -349,7 +357,17 @@ func (e *Echo) Routers() map[string]*Router {
 
 // DefaultHTTPErrorHandler is the default HTTP error handler. It sends a JSON response
 // with status code.
+//
+// NOTE: In case errors happens in middleware call-chain that is returning from handler (which did not return an error).
+// When handler has already sent response (ala c.JSON()) and there is error in middleware that is returning from
+// handler. Then the error that global error handler received will be ignored because we have already "commited" the
+// response and status code header has been sent to the client.
 func (e *Echo) DefaultHTTPErrorHandler(err error, c Context) {
+
+	if c.Response().Committed {
+		return
+	}
+
 	he, ok := err.(*HTTPError)
 	if ok {
 		if he.Internal != nil {
@@ -376,15 +394,13 @@ func (e *Echo) DefaultHTTPErrorHandler(err error, c Context) {
 	}
 
 	// Send response
-	if !c.Response().Committed {
-		if c.Request().Method == http.MethodHead { // Issue #608
-			err = c.NoContent(he.Code)
-		} else {
-			err = c.JSON(code, message)
-		}
-		if err != nil {
-			e.Logger.Error(err)
-		}
+	if c.Request().Method == http.MethodHead { // Issue #608
+		err = c.NoContent(he.Code)
+	} else {
+		err = c.JSON(code, message)
+	}
+	if err != nil {
+		e.Logger.Error(err)
 	}
 }
 
@@ -629,12 +645,12 @@ func (e *Echo) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h := NotFoundHandler
 
 	if e.premiddleware == nil {
-		e.findRouter(r.Host).Find(r.Method, r.URL.EscapedPath(), c)
+		e.findRouter(r.Host).Find(r.Method, GetPath(r), c)
 		h = c.Handler()
 		h = applyMiddleware(h, e.middleware...)
 	} else {
 		h = func(c Context) error {
-			e.findRouter(r.Host).Find(r.Method, r.URL.EscapedPath(), c)
+			e.findRouter(r.Host).Find(r.Method, GetPath(r), c)
 			h := c.Handler()
 			h = applyMiddleware(h, e.middleware...)
 			return h(c)
@@ -660,7 +676,7 @@ func (e *Echo) Start(address string) error {
 		return err
 	}
 	e.startupMutex.Unlock()
-	return e.serve()
+	return e.Server.Serve(e.Listener)
 }
 
 // StartTLS starts an HTTPS server.
@@ -740,8 +756,12 @@ func (e *Echo) StartServer(s *http.Server) (err error) {
 		e.startupMutex.Unlock()
 		return err
 	}
+	if s.TLSConfig != nil {
+		e.startupMutex.Unlock()
+		return s.Serve(e.TLSListener)
+	}
 	e.startupMutex.Unlock()
-	return e.serve()
+	return s.Serve(e.Listener)
 }
 
 func (e *Echo) configureServer(s *http.Server) (err error) {
@@ -780,13 +800,6 @@ func (e *Echo) configureServer(s *http.Server) (err error) {
 		e.colorer.Printf("⇨ https server started on %s\n", e.colorer.Green(e.TLSListener.Addr()))
 	}
 	return nil
-}
-
-func (e *Echo) serve() error {
-	if e.TLSListener != nil {
-		return e.Server.Serve(e.TLSListener)
-	}
-	return e.Server.Serve(e.Listener)
 }
 
 // ListenerAddr returns net.Addr for Listener
@@ -910,6 +923,18 @@ func WrapMiddleware(m func(http.Handler) http.Handler) MiddlewareFunc {
 			return
 		}
 	}
+}
+
+// GetPath returns RawPath, if it's empty returns Path from URL
+// Difference between RawPath and Path is:
+//  * Path is where request path is stored. Value is stored in decoded form: /%47%6f%2f becomes /Go/.
+//  * RawPath is an optional field which only gets set if the default encoding is different from Path.
+func GetPath(r *http.Request) string {
+	path := r.URL.RawPath
+	if path == "" {
+		path = r.URL.Path
+	}
+	return path
 }
 
 func (e *Echo) findRouter(host string) *Router {

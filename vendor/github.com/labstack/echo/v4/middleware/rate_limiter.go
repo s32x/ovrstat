@@ -169,7 +169,8 @@ type (
 
 /*
 NewRateLimiterMemoryStore returns an instance of RateLimiterMemoryStore with
-the provided rate (as req/s). Burst and ExpiresIn will be set to default values.
+the provided rate (as req/s). The provided rate less than 1 will be treated as zero.
+Burst and ExpiresIn will be set to default values.
 
 Example (with 20 requests/sec):
 
@@ -263,6 +264,4 @@ func (store *RateLimiterMemoryStore) cleanupStaleVisitors() {
 /*
 actual time method which is mocked in test file
 */
-var now = func() time.Time {
-	return time.Now()
-}
+var now = time.Now

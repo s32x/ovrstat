@@ -1,6 +1,123 @@
 # Changelog
 
-## v4.2.0 - 2020-02-11
+## v4.6.1 - 2021-09-26
+
+**Enhancements**
+
+* Add start time to request logger middleware values [#1991](https://github.com/labstack/echo/pull/1991)
+
+## v4.6.0 - 2021-09-20
+
+Introduced a new [request logger](https://github.com/labstack/echo/blob/master/middleware/request_logger.go) middleware 
+to help with cases when you want to use some other logging library in your application.
+
+**Fixes**
+
+* fix timeout middleware warning: superfluous response.WriteHeader [#1905](https://github.com/labstack/echo/issues/1905)
+
+**Enhancements**
+
+* Add Cookie to KeyAuth middleware's KeyLookup [#1929](https://github.com/labstack/echo/pull/1929)
+* JWT middleware should ignore case of auth scheme in request header [#1951](https://github.com/labstack/echo/pull/1951)
+* Refactor default error handler to return first if response is already committed [#1956](https://github.com/labstack/echo/pull/1956)
+* Added request logger middleware which helps to use custom logger library for logging requests. [#1980](https://github.com/labstack/echo/pull/1980)
+* Allow escaping of colon in route path so Google Cloud API "custom methods" could be implemented [#1988](https://github.com/labstack/echo/pull/1988)
+
+## v4.5.0 - 2021-08-01
+
+**Important notes**
+
+A **BREAKING CHANGE** is introduced for JWT middleware users.
+The JWT library used for the JWT middleware had to be changed from [github.com/dgrijalva/jwt-go](https://github.com/dgrijalva/jwt-go) to
+[github.com/golang-jwt/jwt](https://github.com/golang-jwt/jwt) due former library being unmaintained and affected by security
+issues.
+The [github.com/golang-jwt/jwt](https://github.com/golang-jwt/jwt) project is a drop-in replacement, but supports only the latest 2 Go versions.
+So for JWT middleware users Go 1.15+ is required. For detailed information please read [#1940](https://github.com/labstack/echo/discussions/)
+
+To change the library imports in all .go files in your project replace all occurrences of `dgrijalva/jwt-go` with `golang-jwt/jwt`.
+
+For Linux CLI you can use:
+```bash
+find -type f -name "*.go" -exec sed -i "s/dgrijalva\/jwt-go/golang-jwt\/jwt/g" {} \;
+go mod tidy
+```
+
+**Fixes**
+
+* Change JWT library to `github.com/golang-jwt/jwt` [#1946](https://github.com/labstack/echo/pull/1946)
+
+## v4.4.0 - 2021-07-12
+
+**Fixes**
+
+* Split HeaderXForwardedFor header only by comma [#1878](https://github.com/labstack/echo/pull/1878)
+* Fix Timeout middleware Context propagation [#1910](https://github.com/labstack/echo/pull/1910)
+ 
+**Enhancements**
+
+* Bind data using headers as source [#1866](https://github.com/labstack/echo/pull/1866)
+* Adds JWTConfig.ParseTokenFunc to JWT middleware to allow different libraries implementing JWT parsing. [#1887](https://github.com/labstack/echo/pull/1887)
+* Adding tests for Echo#Host [#1895](https://github.com/labstack/echo/pull/1895)
+* Adds RequestIDHandler function to RequestID middleware [#1898](https://github.com/labstack/echo/pull/1898)
+* Allow for custom JSON encoding implementations [#1880](https://github.com/labstack/echo/pull/1880)
+
+## v4.3.0 - 2021-05-08
+
+**Important notes**
+
+* Route matching has improvements for following cases:
+  1. Correctly match routes with parameter part as last part of route (with trailing backslash)
+  2. Considering handlers when resolving routes and search for matching http method handler
+* Echo minimal Go version is now 1.13. 
+
+**Fixes**
+
+* When url ends with slash first param route is the match [#1804](https://github.com/labstack/echo/pull/1812)
+* Router should check if node is suitable as matching route by path+method and if not then continue search in tree [#1808](https://github.com/labstack/echo/issues/1808)
+* Fix timeout middleware not writing response correctly when handler panics [#1864](https://github.com/labstack/echo/pull/1864)
+* Fix binder not working with embedded pointer structs [#1861](https://github.com/labstack/echo/pull/1861)
+* Add Go 1.16 to CI and drop 1.12 specific code [#1850](https://github.com/labstack/echo/pull/1850)
+
+**Enhancements**
+
+* Make KeyFunc public in JWT middleware [#1756](https://github.com/labstack/echo/pull/1756)
+* Add support for optional filesystem to the static middleware [#1797](https://github.com/labstack/echo/pull/1797)
+* Add a custom error handler to key-auth middleware [#1847](https://github.com/labstack/echo/pull/1847)
+* Allow JWT token to be looked up from multiple sources [#1845](https://github.com/labstack/echo/pull/1845)
+
+## v4.2.2 - 2021-04-07
+
+**Fixes**
+
+* Allow proxy middleware to use query part in rewrite (#1802)
+* Fix timeout middleware not sending status code when handler returns an error (#1805)
+* Fix Bind() when target is array/slice and path/query params complains bind target not being struct (#1835)
+* Fix panic in redirect middleware on short host name (#1813)
+* Fix timeout middleware docs (#1836)
+
+## v4.2.1 - 2021-03-08
+
+**Important notes**
+
+Due to a datarace the config parameters for the newly added timeout middleware required a change.
+See the [docs](https://echo.labstack.com/middleware/timeout).
+A performance regression has been fixed, even bringing better performance than before for some routing scenarios.
+
+**Fixes**
+
+* Fix performance regression caused by path escaping (#1777, #1798, #1799, aldas)
+* Avoid context canceled errors (#1789, clwluvw)
+* Improve router to use on stack backtracking (#1791, aldas, stffabi)
+* Fix panic in timeout middleware not being not recovered and cause application crash (#1794, aldas)
+* Fix Echo.Serve() not serving on HTTP port correctly when TLSListener is used (#1785, #1793, aldas)
+* Apply go fmt (#1788, Le0tk0k)
+* Uses strings.Equalfold (#1790, rkilingr)
+* Improve code quality (#1792, withshubh)
+
+This release was made possible by our **contributors**:
+aldas, clwluvw, lammel, Le0tk0k, maciej-jezierski, rkilingr, stffabi, withshubh
+
+## v4.2.0 - 2021-02-11
 
 **Important notes**
 
