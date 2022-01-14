@@ -12,8 +12,8 @@ type PlayerStats struct {
 	PrestigeIcon     string          `json:"prestigeIcon"`
 	Ratings          []Rating        `json:"ratings"`
 	GamesWon         int             `json:"gamesWon"`
-	QuickPlayStats   statsCollection `json:"quickPlayStats"`
-	CompetitiveStats statsCollection `json:"competitiveStats"`
+	QuickPlayStats   StatsCollection `json:"quickPlayStats"`
+	CompetitiveStats StatsCollection `json:"competitiveStats"`
 	Private          bool            `json:"private"`
 }
 
@@ -24,14 +24,14 @@ type Rating struct {
 	RankIcon string `json:"rankIcon"`
 }
 
-// statsCollection holds a collection of stats for a particular player
-type statsCollection struct {
-	TopHeroes   map[string]*topHeroStats `json:"topHeroes"`
-	CareerStats map[string]*careerStats  `json:"careerStats"`
+// StatsCollection holds a collection of stats for a particular player
+type StatsCollection struct {
+	TopHeroes   map[string]*TopHeroStats `json:"topHeroes"`
+	CareerStats map[string]*CareerStats  `json:"CareerStats"`
 }
 
-// topHeroStats holds basic stats for each hero
-type topHeroStats struct {
+// TopHeroStats holds basic stats for each hero
+type TopHeroStats struct {
 	TimePlayed          string  `json:"timePlayed"`
 	GamesWon            int     `json:"gamesWon"`
 	WinPercentage       int     `json:"winPercentage"`
@@ -41,8 +41,8 @@ type topHeroStats struct {
 	ObjectiveKills      float64 `json:"objectiveKills"`
 }
 
-// careerStats holds very detailed stats for each hero
-type careerStats struct {
+// CareerStats holds very detailed stats for each hero
+type CareerStats struct {
 	Assists       map[string]interface{} `json:"assists"`
 	Average       map[string]interface{} `json:"average"`
 	Best          map[string]interface{} `json:"best"`
