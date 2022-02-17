@@ -1,11 +1,11 @@
-package service /* import "s32x.com/ovrstat/service" */
+package service
 
 import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
-	"s32x.com/ovrstat/ovrstat"
+	"github.com/s32x/ovrstat/ovrstat"
 )
 
 // stats handles retrieving and serving Overwatch stats in JSON

@@ -1,4 +1,4 @@
-package service /* import "s32x.com/ovrstat/service" */
+package service
 
 import (
 	"embed"

@@ -1,4 +1,4 @@
-package ovrstat /* import "s32x.com/ovrstat/ovrstat" */
+package ovrstat
 
 // PlayerStats holds all stats on a specified Overwatch player
 type PlayerStats struct {

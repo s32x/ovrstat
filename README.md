@@ -2,8 +2,8 @@
 <img src="service/static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
 <br>
 <a href="https://github.com/s32x/ovrstat/actions"><img src="https://github.com/s32x/ovrstat/workflows/Deploy/badge.svg" alt="Actions"></a>
-<a href="https://goreportcard.com/report/s32x.com/ovrstat"><img src="https://goreportcard.com/badge/s32x.com/ovrstat" alt="Go Report Card"></a>
-<a href="https://godoc.org/s32x.com/ovrstat/ovrstat"><img src="https://godoc.org/s32x.com/ovrstat/ovrstat?status.svg" alt="GoDoc"></a>
+<a href="https://goreportcard.com/report/github.com/s32x/ovrstat"><img src="https://goreportcard.com/badge/github.com/s32x/ovrstat" alt="Go Report Card"></a>
+<a href="https://godoc.org/github.com/s32x/ovrstat/ovrstat"><img src="https://godoc.org/github.com/s32x/ovrstat/ovrstat?status.svg" alt="GoDoc"></a>
 </p>
 
 `ovrstat` is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary. This is a single endpoint web-scraping API that takes the full payload of information that we retrieve from Blizzard and passes it through to you in a single response. Things like caching and splitting data across multiple responses could likely improve performance, but in pursuit of keeping things simple, ovrstat does not implement them.
@@ -23,7 +23,7 @@ https://ovrstat.com/stats/nintendo-switch/Mario-70af1a16ae4913bde139d46edb43df55
 ### Installing
 To start using ovrstat on your local system, install Go and run `go get`:
 ```
-$ go get s32x.com/ovrstat
+$ go get github.com/s32x/ovrstat
 ```
 This will install the ipdata binary on your machine.
 
@@ -42,7 +42,7 @@ package main
 import (
 	"log"
 
-	"s32x.com/ovrstat/ovrstat"
+	"github.com/s32x/ovrstat/ovrstat"
 )
 
 func main() {
@@ -59,7 +59,7 @@ ovrstat isn’t endorsed by Blizzard and doesn’t reflect the views or opinions
 The BSD 3-clause License
 ========================
 
-Copyright (c) 2021, s32x. All rights reserved.
+Copyright (c) 2022, s32x. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
