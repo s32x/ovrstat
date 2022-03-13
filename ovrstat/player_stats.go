@@ -224,16 +224,16 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 }
 
 // parseDetailedStats populates the passed stats collection with detailed statistics
-func parseDetailedStats(playModeSelector *goquery.Selection) statsCollection {
-	var sc statsCollection
+func parseDetailedStats(playModeSelector *goquery.Selection) StatsCollection {
+	var sc StatsCollection
 	sc.TopHeroes = parseHeroStats(playModeSelector.Find("div.progress-category").Parent())
 	sc.CareerStats = parseCareerStats(playModeSelector.Find("div.js-stats").Parent())
 	return sc
 }
 
 // parseHeroStats : Parses stats for each individual hero and returns a map
-func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroStats {
-	bhsMap := make(map[string]*topHeroStats)
+func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*TopHeroStats {
+	bhsMap := make(map[string]*TopHeroStats)
 
 	heroStatsSelector.Find("div.progress-category").Each(func(i int, heroGroupSel *goquery.Selection) {
 		categoryID, _ := heroGroupSel.Attr("data-category-id")
@@ -244,7 +244,7 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 
 			// Creates hero map if it doesn't exist
 			if bhsMap[heroName] == nil {
-				bhsMap[heroName] = new(topHeroStats)
+				bhsMap[heroName] = new(TopHeroStats)
 			}
 
 			// Sets hero stats based on stat category type
@@ -270,8 +270,8 @@ func parseHeroStats(heroStatsSelector *goquery.Selection) map[string]*topHeroSta
 }
 
 // parseCareerStats
-func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*careerStats {
-	csMap := make(map[string]*careerStats)
+func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*CareerStats {
+	csMap := make(map[string]*CareerStats)
 	heroMap := make(map[string]string)
 
 	// Populates tempHeroMap to match hero ID to name in second scrape
@@ -305,7 +305,7 @@ func parseCareerStats(careerStatsSelector *goquery.Selection) map[string]*career
 
 						// Creates stat map if it doesn't exist
 						if csMap[currentHero] == nil {
-							csMap[currentHero] = new(careerStats)
+							csMap[currentHero] = new(CareerStats)
 						}
 
 						// Switches on type, creating category stat maps if exists (will omitempty on json marshal)
