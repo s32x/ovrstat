@@ -10,13 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
-        uses: actions/setup-go
+        uses: actions/setup-go@v3
         with:
           go-version: 1.18.3 # Also see: https://github.com/actions/go-versions/blob/main/versions-manifest.json
-        id: go
 
       - name: Check out the repository
-        uses: actions/checkout
+        uses: actions/checkout@v3
 
       - name: Test all packages
         run: go test -v ./...
@@ -25,7 +24,7 @@ jobs:
         run: go build -v -o server .
       
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
