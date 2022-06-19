@@ -88,7 +88,7 @@ func splitKeywords(str string) Keywords {
 
 func sliceIndexOf(s []string, str string) int {
 	for i, val := range s {
-		if strings.ToLower(val) == strings.ToLower(str) {
+		if strings.EqualFold(val, str) {
 			return i
 		}
 	}
