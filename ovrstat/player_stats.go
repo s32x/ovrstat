@@ -150,15 +150,8 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		return &ps, nil
 	}
 
-	quickPlayStats := parseDetailedStats(pd.Find("div#quickplay").First())
-
-	ps.QuickPlayStats.CareerStats = quickPlayStats.CareerStats
-	ps.QuickPlayStats.TopHeroes = quickPlayStats.TopHeroes
-
-	competitiveStats := parseDetailedStats(pd.Find("div#competitive").First())
-
-	ps.CompetitiveStats.CareerStats = competitiveStats.CareerStats
-	ps.CompetitiveStats.TopHeroes = competitiveStats.TopHeroes
+	parseDetailedStats(pd.Find("div#quickplay").First(), &ps.QuickPlayStats.StatsCollection)
+	parseDetailedStats(pd.Find("div#competitive").First(), &ps.CompetitiveStats.StatsCollection)
 
 	competitiveSeason, _ := pd.Find("div[data-competitive-season]").Attr("data-competitive-season")
 
@@ -239,11 +232,9 @@ func parseGeneralInfo(s *goquery.Selection) PlayerStats {
 }
 
 // parseDetailedStats populates the passed stats collection with detailed statistics
-func parseDetailedStats(playModeSelector *goquery.Selection) StatsCollection {
-	var sc StatsCollection
+func parseDetailedStats(playModeSelector *goquery.Selection, sc *StatsCollection) {
 	sc.TopHeroes = parseHeroStats(playModeSelector.Find("div.progress-category").Parent())
 	sc.CareerStats = parseCareerStats(playModeSelector.Find("div.js-stats").Parent())
-	return sc
 }
 
 // parseHeroStats : Parses stats for each individual hero and returns a map
