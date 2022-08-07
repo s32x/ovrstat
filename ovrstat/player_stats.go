@@ -89,14 +89,6 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 	// Scrapes all stats for the passed user and sets struct member data
 	ps := parseGeneralInfo(pd.Find("div.masthead").First())
 
-	competitiveSeason, _ := pd.Find("div[data-competitive-season]").Attr("data-competitive-season")
-
-	if competitiveSeason != "" {
-		competitiveSeason, _ := strconv.Atoi(competitiveSeason)
-
-		ps.CompetitiveSeason = &competitiveSeason
-	}
-
 	// Perform api request
 	var platforms []Platform
 
@@ -158,8 +150,23 @@ func playerStats(profilePath string, platform string) (*PlayerStats, error) {
 		return &ps, nil
 	}
 
-	ps.QuickPlayStats = parseDetailedStats(pd.Find("div#quickplay").First())
-	ps.CompetitiveStats = parseDetailedStats(pd.Find("div#competitive").First())
+	quickPlayStats := parseDetailedStats(pd.Find("div#quickplay").First())
+
+	ps.QuickPlayStats.CareerStats = quickPlayStats.CareerStats
+	ps.QuickPlayStats.TopHeroes = quickPlayStats.TopHeroes
+
+	competitiveStats := parseDetailedStats(pd.Find("div#competitive").First())
+
+	ps.CompetitiveStats.CareerStats = competitiveStats.CareerStats
+	ps.CompetitiveStats.TopHeroes = competitiveStats.TopHeroes
+
+	competitiveSeason, _ := pd.Find("div[data-competitive-season]").Attr("data-competitive-season")
+
+	if competitiveSeason != "" {
+		competitiveSeason, _ := strconv.Atoi(competitiveSeason)
+
+		ps.CompetitiveStats.Season = &competitiveSeason
+	}
 
 	return &ps, nil
 }
