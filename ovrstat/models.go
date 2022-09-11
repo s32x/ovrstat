@@ -2,19 +2,19 @@ package ovrstat
 
 // PlayerStats holds all stats on a specified Overwatch player
 type PlayerStats struct {
-	Icon             string          `json:"icon"`
-	Name             string          `json:"name"`
-	Level            int             `json:"level"`
-	LevelIcon        string          `json:"levelIcon"`
-	Endorsement      int             `json:"endorsement"`
-	EndorsementIcon  string          `json:"endorsementIcon"`
-	Prestige         int             `json:"prestige"`
-	PrestigeIcon     string          `json:"prestigeIcon"`
-	Ratings          []Rating        `json:"ratings"`
-	GamesWon         int             `json:"gamesWon"`
-	QuickPlayStats   StatsCollection `json:"quickPlayStats"`
-	CompetitiveStats StatsCollection `json:"competitiveStats"`
-	Private          bool            `json:"private"`
+	Icon             string                     `json:"icon"`
+	Name             string                     `json:"name"`
+	Level            int                        `json:"level"`
+	LevelIcon        string                     `json:"levelIcon"`
+	Endorsement      int                        `json:"endorsement"`
+	EndorsementIcon  string                     `json:"endorsementIcon"`
+	Prestige         int                        `json:"prestige"`
+	PrestigeIcon     string                     `json:"prestigeIcon"`
+	Ratings          []Rating                   `json:"ratings"`
+	GamesWon         int                        `json:"gamesWon"`
+	QuickPlayStats   QuickPlayStatsCollection   `json:"quickPlayStats"`
+	CompetitiveStats CompetitiveStatsCollection `json:"competitiveStats"`
+	Private          bool                       `json:"private"`
 }
 
 type Rating struct {
@@ -24,10 +24,18 @@ type Rating struct {
 	RankIcon string `json:"rankIcon"`
 }
 
-// StatsCollection holds a collection of stats for a particular player
 type StatsCollection struct {
 	TopHeroes   map[string]*TopHeroStats `json:"topHeroes"`
 	CareerStats map[string]*CareerStats  `json:"CareerStats"`
+}
+
+type CompetitiveStatsCollection struct {
+	Season *int `json:"season"`
+	StatsCollection
+}
+
+type QuickPlayStatsCollection struct {
+	StatsCollection
 }
 
 // TopHeroStats holds basic stats for each hero
