@@ -1,40 +1,34 @@
 <p align="center">
 <img src="service/static/assets/logo.png" width="310" height="71" border="0" alt="ovrstat">
 <br>
-<a href="https://github.com/s32x/ovrstat/actions"><img src="https://github.com/s32x/ovrstat/workflows/Deploy/badge.svg" alt="Actions"></a>
 <a href="https://goreportcard.com/report/github.com/s32x/ovrstat"><img src="https://goreportcard.com/badge/github.com/s32x/ovrstat" alt="Go Report Card"></a>
 <a href="https://godoc.org/github.com/s32x/ovrstat/ovrstat"><img src="https://godoc.org/github.com/s32x/ovrstat/ovrstat?status.svg" alt="GoDoc"></a>
 </p>
 
+# Please Note: The Public Ovrstat API will be shutdown on October 1st 2022. Before then it is recommend to find your own way of running it locally to avoid service interruption.
+
 `ovrstat` is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary. This is a single endpoint web-scraping API that takes the full payload of information that we retrieve from Blizzard and passes it through to you in a single response. Things like caching and splitting data across multiple responses could likely improve performance, but in pursuit of keeping things simple, ovrstat does not implement them.
 
 ## Getting Started
-
-### Public API Usage
-
-Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
-```
-https://ovrstat.com/stats/pc/Viz-1213
-https://ovrstat.com/stats/xbl/Lt%20Evolution
-https://ovrstat.com/stats/psn/TayuyaBreast
-https://ovrstat.com/stats/nintendo-switch/Mario-70af1a16ae4913bde139d46edb43df55
-```
-
-### Installing
+### Installing Locally with Go
 To start using ovrstat on your local system, install Go and run `go get`:
 ```
 $ go get github.com/s32x/ovrstat
 ```
-This will install the ipdata binary on your machine.
-
-### Running with Docker
-To start using IPData via Docker, install Docker and run `docker run`:
+This will install the ovrstat service on your machine. Running the following will then launch the service.
 ```
-docker run -p 8080:8080 s32x/ovrstat
+$ ovrstat
 ```
-This will retrieve the remote DockerHub image and start the service on port 8080.
+### Local API Usage
 
-## Full Go example
+Below is an example of using the REST endpoint (note: CASE matters for the username/tag):
+```
+http://localhost:8080/stats/pc/Viz-1213
+http://localhost:8080/stats/xbl/Lt%20Evolution
+http://localhost:8080/stats/psn/TayuyaBreast
+http://localhost:8080/stats/nintendo-switch/Mario-70af1a16ae4913bde139d46edb43df55
+```
+### Using Go to retrieve Stats
 
 ```go
 package main
