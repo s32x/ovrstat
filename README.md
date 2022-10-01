@@ -5,7 +5,7 @@
 <a href="https://godoc.org/github.com/s32x/ovrstat/ovrstat"><img src="https://godoc.org/github.com/s32x/ovrstat/ovrstat?status.svg" alt="GoDoc"></a>
 </p>
 
-# Please Note: The Public Ovrstat API will be shutdown on October 1st 2022. Before then it is recommend to find your own way of running it locally to avoid service interruption.
+# The Public Ovrstat API was shutdown on October 1st 2022 and this project has been archived. Please check out [ow-api](https://ow-api.com/docs/) as a possible alternative.
 
 `ovrstat` is a simple web scraper for the Overwatch stats site that parses and serves the data retrieved as JSON. Included is the go package used to scrape the info for usage in any go binary. This is a single endpoint web-scraping API that takes the full payload of information that we retrieve from Blizzard and passes it through to you in a single response. Things like caching and splitting data across multiple responses could likely improve performance, but in pursuit of keeping things simple, ovrstat does not implement them.
 
